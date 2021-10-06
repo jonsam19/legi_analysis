@@ -1,5 +1,5 @@
 ## copy and run code to start the app
-# shiny::runApp("T:/SPM/ESCAIDE/Historical data/Analysis/app/app.R")
+# shiny::runApp("C:/R/legi_analysis/Legi/app.R")
 
 rm(list=ls())
 
@@ -13,11 +13,10 @@ library(knitr)
 library(kableExtra)
 
 ## Setting working directory   
-PATH="C:/R/Legi/"
-setwd(PATH)
+PATH="C:/R/legi_analysis/"
 
 ## load functions
-source(paste(PATH,"scripts/legi_functions.R",sep=""),local=TRUE)
+source(paste(PATH,"Legi/legi_functions.R",sep=""),local=TRUE)
 
 ## prepare the data
 source(paste(PATH,"Legi/prepare_data.R",sep=""),local=TRUE)

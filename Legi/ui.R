@@ -8,8 +8,7 @@ ui <- fluidPage(
                                                           radioButtons("select_gender", "Select gender",
                                                                        choices=list("All"="All",
                                                                                     "Female"="F",
-                                                                                    "Male"="M",
-                                                                                    "Unknown"="UNK"))),
+                                                                                    "Male"="M"))),
                                              mainPanel(plotlyOutput("forecast_plot")))
                                    
                
