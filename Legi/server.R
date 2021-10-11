@@ -2,7 +2,7 @@ server <- function(input, output, session) {
 
     forecast_plot <- reactive(
             
-            if(input$select_gender=="All"){
+            if(input$prediction_gender=="All"){
                 ECDC_plot(
                 forecast(
                     legi_tsibble %>%
@@ -26,7 +26,7 @@ server <- function(input, output, session) {
                 } else {
                     ECDC_plot(
             forecast(
-                legi_tsibble %>% filter(Gender==input$select_gender) %>% 
+                legi_tsibble %>% filter(Gender==input$prediction_gender) %>% 
                     summarise(cases=sum(nb)) %>% filter_index(.~"2016 W52") %>%
                     model(ARIMA(log(cases+1)~fourier(K=3)+1+pdq(1,1,1)+PDQ(0,0,0))),h=156) %>% 
                 
@@ -39,14 +39,35 @@ server <- function(input, output, session) {
                     lower_80 = '80%_lower') %>% 
                 
                 ## join observed cases
-                left_join(legi_tsibble %>% filter(Gender==input$select_gender) %>%
+                left_join(legi_tsibble %>% filter(Gender==input$prediction_gender) %>%
                               summarise(cases=sum(nb)) %>% 
                               filter_index("2017 W01"~.), 
                           by="week") %>% rename("observed"="cases.y"), 
-            legi_tsibble %>% filter(Gender==input$select_gender) %>% summarise(cases=sum(nb)))
+            legi_tsibble %>% filter(Gender==input$prediction_gender) %>% summarise(cases=sum(nb)))
                 }
     )
     
+
+    
+    its_plot <- reactive(
+      
+      if(input$its_gender=="All"){
+        its_fun(
+          
+            legi_tsibble %>%
+              summarise(cases=sum(nb)))
+      } else {
+        its_fun(
+          
+            legi_tsibble %>% filter(Gender==input$its_gender) %>% 
+              summarise(cases=sum(nb)))
+      }
+    )
+    
+    
+    
 ## output
     output$forecast_plot <- renderPlotly(ggplotly(forecast_plot()))
+    
+    output$its_plot <- renderPlotly(ggplotly(its_plot()))
 }

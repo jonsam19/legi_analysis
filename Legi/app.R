@@ -1,5 +1,3 @@
-## copy and run code to start the app
-# shiny::runApp("C:/R/legi_analysis/Legi/app.R")
 
 rm(list=ls())
 
