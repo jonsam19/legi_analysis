@@ -1,3 +1,5 @@
+library(plotly)
+
 ui <- fluidPage(
     
     navbarPage("Legi analysis",
@@ -9,7 +11,11 @@ ui <- fluidPage(
                                                                        choices=list("All"="All",
                                                                                     "Female"="F",
                                                                                     "Male"="M"))),
-                                             mainPanel(plotlyOutput("forecast_plot"))),
+                                             mainPanel(
+                                               tabsetPanel(type="tabs",
+                                                           tabPanel("Plot",plotlyOutput("forecast_plot")),
+                                                           tabPanel("Table"))
+                                               )),
                
                
                

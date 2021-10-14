@@ -1,7 +1,7 @@
 ######################### prepare the data ############################
 
 ## read in legi data and create aggregated data
-legidata <- read_csv("Data/legi_agg_onset_4.csv",
+legidata <- read_csv("legi_agg_onset_4.csv",
                      col_type = list(col_character(), col_date(), col_date(), col_date(), 
                                      col_character(), col_double(), col_character(), col_character(), 
                                      col_character(), col_character(), col_character(),

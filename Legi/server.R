@@ -1,5 +1,8 @@
-server <- function(input, output, session) {
+source("legi_functions.R",local=TRUE)
+source("prepare_data.R",local=TRUE)
 
+server <- function(input, output, session) {
+  
     forecast_plot <- reactive(
             
             if(input$prediction_gender=="All"){
