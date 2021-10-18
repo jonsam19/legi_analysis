@@ -14,16 +14,16 @@ library(kableExtra)
 PATH="C:/R/legi_analysis/"
 
 ## load functions
-source(paste(PATH,"Legi/legi_functions.R",sep=""),local=TRUE)
+source(paste(PATH,"app/legi_functions.R",sep=""),local=TRUE)
 
 ## prepare the data
-source(paste(PATH,"Legi/prepare_data.R",sep=""),local=TRUE)
+source(paste(PATH,"app/prepare_data.R",sep=""),local=TRUE)
 
 ## run UI
-source(paste(PATH,"Legi/ui.R",sep=""),local=TRUE)
+source(paste(PATH,"app/ui.R",sep=""),local=TRUE)
 
 ## run server
-source(paste(PATH,"Legi/server.R",sep=""),local=TRUE)
+source(paste(PATH,"app/server.R",sep=""),local=TRUE)
 
 # Run the application 
 shinyApp(ui = ui, server = server)
