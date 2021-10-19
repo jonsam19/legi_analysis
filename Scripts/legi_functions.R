@@ -129,9 +129,9 @@ fourier_model_lambda <- function(country){
 }
 
 
-######################## ECDC plot #########################
+######################## ECDC plot old #########################
 
-ECDC_plot <- function(forecast_model, country){
+ECDC_plot_old <- function(forecast_model, country){
   
   # FIGTSBREAKS <- pretty(seq(0, max(forecast_model[["upper_95"]]),
   #                          by = max(forecast_model[["upper_95"]])/5))
@@ -161,6 +161,53 @@ ECDC_plot <- function(forecast_model, country){
     guides(fill=guide_legend(reverse=TRUE), colour=guide_legend(reverse=TRUE))
   
 }
+
+
+
+######################## ECDC plot #########################
+
+ECDC_plot <- function(forecast_model, country){
+  
+  # FIGTSBREAKS <- pretty(seq(0, max(forecast_model[["upper_95"]]),
+  #                          by = max(forecast_model[["upper_95"]])/5))
+  
+  ggplot() +
+    geom_ribbon(forecast_model, 
+                mapping=aes(x=as.Date(week), ymin=lower_95, ymax=upper_95, colour='95% PI',
+                            fill='95% PI')) +
+    geom_ribbon(forecast_model, 
+                mapping=aes(x=as.Date(week), ymin=lower_80, ymax=upper_80, colour='80% PI',
+                            fill='80% PI')) +
+    geom_line(country, 
+              mapping=aes(x=as.Date(week), y=cases, colour="Observed", fill="Observed"), size=1) +
+    geom_line(forecast_model, 
+              mapping=aes(x=as.Date(week), y=.mean, colour="Predicted", fill="Predicted"), size=1) +
+    geom_line(forecast_model,
+              mapping=aes(x=as.Date(week), y=observed, colour="Observed", fill="Observed"), size=1) +
+    scale_x_date(date_labels = "  %Y", date_breaks= "1 year", expand = c(0, 0),
+                 limits=c(as.Date("2012-01-01"),as.Date("2020-01-01"))) + 
+    scale_y_continuous(expand = c(0, 0)) +
+    coord_cartesian(ylim=c(0, NA)) +
+    ylab("Cases") + xlab("Year") +
+    scale_colour_manual("lines", values=c("Predicted" = rgb(204,107,33,maxColorValue = 255),
+                                          "Observed" = rgb(101,179,46,maxColorValue = 255),
+                                          "95% PI" = rgb(225,167,68,maxColorValue = 255),
+                                          "80% PI" = rgb(241,214,118,maxColorValue = 255))) +
+    scale_fill_manual("ribbons", values=c("95% PI" = rgb(225,167,68,maxColorValue = 255),
+                                          "80% PI" = rgb(241,214,118,maxColorValue = 255),
+                                          "Predicted" = rgb(204,107,33,maxColorValue = 255),
+                                          "Observed" = rgb(101,179,46,maxColorValue = 255))) +
+    theme(axis.text=element_text(size=12),
+          axis.title=element_text(size=13)) +    #Axis text style
+    theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), 
+          panel.background = element_blank()) +  #Empty backgroud
+    theme(axis.line = element_line(colour = "#767171") ) +
+    theme(legend.position = "right", legend.title =element_blank(), legend.text =element_text(size=12),
+          legend.key=element_blank(), legend.key.width = unit(0.8, "cm")) +
+    guides(fill=guide_legend(reverse=TRUE), colour=guide_legend(reverse=TRUE))
+  
+}
+
 
 
 ####################### decomposition function ##############################
