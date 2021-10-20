@@ -1,3 +1,5 @@
+library(plotly)
+
 ui <- fluidPage(
     
     navbarPage("Legi analysis",

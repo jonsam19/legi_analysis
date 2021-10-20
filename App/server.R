@@ -1,3 +1,5 @@
+source("App/legi_functions.R",local=TRUE)
+
 server <- function(input, output, session) {
 
     forecast_plot <- reactive(

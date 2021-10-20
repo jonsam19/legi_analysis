@@ -98,28 +98,7 @@ f <- legidata_c %>% summarise(sum(nb))
 
 
 ## aggregate
-agg_legidata <- legidata %>% group_by(CountryName, Imported3, Gender, AgeGroup2, week) %>%
-  summarise(nb=sum(nb)) %>% ungroup()
-
-agg_legiall <- legi_all %>% group_by(CountryName, week) %>%
-  summarise(nb=sum(nb)) %>% ungroup()
-
-agg_legidata_nopt <- legidata_nopt %>% group_by(CountryName, Imported3, Gender, AgeGroup2, week) %>%
-  summarise(nb=sum(nb)) %>% ungroup()
-
-agg_legidata_noc <- legidata_noc %>% group_by(week) %>%
-  summarise(nb=sum(nb)) %>% ungroup()
-
-agg_legidata_c <- legidata_c %>% group_by(week) %>%
-  summarise(nb=sum(nb)) %>% ungroup()
-
-agg_legidata_de <- legidata_de %>% group_by(week) %>%
-  summarise(nb=sum(nb)) %>% ungroup()
-
-agg_monthly <- legidata %>% group_by(CountryName, Imported3, Gender, AgeGroup2, month) %>%
-  summarise(nb=sum(nb)) %>% ungroup()
-
-agg_newage <- legidata_nopt %>% group_by(Imported3, AgeGroup3, week) %>%
+agg_legidata <- legidata %>% group_by(Imported3, Gender, AgeGroup2, week) %>%
   summarise(nb=sum(nb)) %>% ungroup()
 
 
@@ -127,71 +106,11 @@ agg_newage <- legidata_nopt %>% group_by(Imported3, AgeGroup3, week) %>%
 ################################################## create Legi tsibbles ###############################################
 legi_tsibble <- agg_legidata %>%
   as_tsibble(index=week, 
-             key=c(CountryName, Imported3, Gender, AgeGroup2)) %>%
+             key=c(Imported3, Gender, AgeGroup2)) %>%
   fill_gaps(.full=TRUE) %>%
   filter_index("2012 W01"~"2019 W52")
 rm(agg_legidata) ## remove aggregated data
 legi_tsibble$nb[is.na(legi_tsibble$nb)] <- 0 ## fill missing weeks with 0 cases
-
-legi_alltsibble <- agg_legiall %>%
-  as_tsibble(index=week, 
-             key=c(CountryName)) %>%
-  fill_gaps(.full=TRUE) %>%
-  filter_index("2012 W01"~"2019 W52")
-rm(agg_legiall)
-legi_alltsibble$nb[is.na(legi_alltsibble$nb)] <- 0
-
-## without PT outbreak
-leginopt_tsibble <- agg_legidata_nopt %>%
-  as_tsibble(index=week, 
-             key=c(CountryName, Imported3, Gender, AgeGroup2)) %>%
-  fill_gaps(.full=TRUE) %>%
-  filter_index("2012 W01"~"2019 W52")
-rm(agg_legidata_nopt)
-leginopt_tsibble$nb[is.na(leginopt_tsibble$nb)] <- 0
-g <- leginopt_tsibble %>% as_tibble() %>% summarise(sum(nb))
-
-## without clusters
-leginoc_tsibble <- agg_legidata_noc %>%
-  as_tsibble(index=week) %>%
-  fill_gaps(.full=TRUE) %>%
-  filter_index("2012 W01"~"2019 W52")
-rm(agg_legidata_noc)
-leginoc_tsibble$nb[is.na(leginoc_tsibble$nb)] <- 0
-
-## only clusters
-legic_tsibble <- agg_legidata_c %>%
-  as_tsibble(index=week) %>%
-  fill_gaps(.full=TRUE) %>%
-  filter_index("2012 W01"~"2019 W52")
-rm(agg_legidata_c)
-legic_tsibble$nb[is.na(legic_tsibble$nb)] <- 0
-
-## with Germany
-legide_tsibble <- agg_legidata_de %>%
-  as_tsibble(index=week) %>%
-  fill_gaps(.full=TRUE) %>%
-  filter_index("2012 W01"~"2019 W52")
-rm(agg_legidata_de)
-legide_tsibble$nb[is.na(legide_tsibble$nb)] <- 0
-
-## monthly data
-legi_monthly <- agg_monthly %>% 
-  as_tsibble(index=month, 
-             key=c(CountryName, Imported3, Gender, AgeGroup2)) %>%
-  fill_gaps(.full=TRUE) %>%
-  filter_index("2012 Jan"~"2019 Dec")
-rm(agg_monthly)
-legi_monthly$nb[is.na(legi_monthly$nb)] <- 0
-
-## new age group
-legi_newage <- agg_newage %>% 
-  as_tsibble(index=week, 
-             key=c(Imported3, AgeGroup3)) %>%
-  fill_gaps(.full=TRUE) %>%
-  filter_index("2012 W01"~"2019 W52")
-rm(agg_newage)
-legi_newage$nb[is.na(legi_newage$nb)] <- 0
 
 ## labels
 x_month <- list(title = "Month")
@@ -201,7 +120,6 @@ y_cases <- list(title = "Cases")
 #y_cases <- list(title = "Cases",font=list(size=1))
 
 ## create vectors of stratifications
-countries <- as.factor(unique(legi_tsibble$CountryName)[!is.na(unique(legi_tsibble$CountryName))])
 imported <- as.factor(unique(legi_tsibble$Imported3)[!is.na(unique(legi_tsibble$Imported3))])
 agearoups <- as.factor(unique(legi_tsibble$AgeGroup2)[!is.na(unique(legi_tsibble$AgeGroup2)) &
                                                         unique(legi_tsibble$AgeGroup2)!="Unknown"])
