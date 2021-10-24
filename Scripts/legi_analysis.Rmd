@@ -160,9 +160,8 @@ ggplotly(p)
 
 ## 2017-2019 retrospective prediction {.tabset}
 
-### Europe {.tabset}
-#### All cases
-
+### All cases {.tabset}
+#### Result
 ```{r europe tsibble, results="asis"}
 ## Europe tsibble
 europe <- legi_tsibble %>%
@@ -191,13 +190,17 @@ forecast_europe$observed <- europe1719$cases
 p <- ECDC_plot(forecast_europe, europe)
 ggplotly(p)
 
-analysis_fun(forecast_europe, model_europe)
+excess_fun(forecast_europe)
+```
+
+#### Model
+```{r europe tsibble model, results="asis"}
+analysis_fun(model_europe)
 ```
 
 
 
-
-#### Imported
+### Imported
 
 ```{r Imported tsibble, results="asis"}
 ## Imported tsibble
@@ -230,12 +233,12 @@ ggplotly(p)
 
 
 
-analysis_fun(forecast_europe, model_europe)
+analysis_fun(model_europe)
 
 ```
 
 
-#### Not imported
+### Not imported
 
 ```{r not imported tsibble, results="asis"}
 ## unknown tsibble
@@ -268,16 +271,14 @@ ggplotly(p)
 
 
 
-analysis_fun(forecast_europe, model_europe)
+analysis_fun(model_europe)
 
 
 ```
 
 
 
-
-
-#### <40
+### <40
 
 ```{r age_40 tsibble, results="asis"}
 ## age_40 tsibble
@@ -309,12 +310,12 @@ p <- ECDC_plot(forecast_europe, europe)
 ggplotly(p)
 
 
-analysis_fun(forecast_europe, model_europe)
+analysis_fun(model_europe)
 
 ```
 
 
-#### 40-49
+### 40-49
 
 ```{r age_40_49 tsibble,results="asis"}
 ## age_40_49 tsibble
@@ -347,13 +348,13 @@ ggplotly(p)
 
 
 
-analysis_fun(forecast_europe, model_europe)
+analysis_fun(model_europe)
 
 
 ```
 
 
-#### 50-59
+### 50-59
 
 ```{r age_50_59 tsibble,results="asis"}
 ## age_50_59 tsibble
@@ -386,13 +387,13 @@ ggplotly(p)
 
 
 
-analysis_fun(forecast_europe, model_europe)
+analysis_fun(model_europe)
 
 
 ```
 
 
-#### 60-69
+### 60-69
 
 ```{r age_60_69 tsibble,results="asis"}
 ## age_60_69 tsibble
@@ -427,13 +428,13 @@ ggplotly(p)
 
 
 
-analysis_fun(forecast_europe, model_europe)
+analysis_fun(model_europe)
 
 
 ```
 
 
-#### 70-79
+### 70-79
 
 ```{r age_70_79 tsibble,results="asis"}
 ## age_70_79 tsibble
@@ -464,17 +465,13 @@ forecast_europe$observed <- europe1719$cases
 p <- ECDC_plot(forecast_europe, europe)
 ggplotly(p)
 
-
-
-
-
-analysis_fun(forecast_europe, model_europe)
+analysis_fun(model_europe)
 
 ```
 
 
 
-#### 80>=
+### 80>=
 
 ```{r age_80 tsibble,results="asis"}
 ## age_80 tsibble
@@ -507,15 +504,13 @@ ggplotly(p)
 
 
 
-
-
-analysis_fun(forecast_europe, model_europe)
+analysis_fun(model_europe)
 
 
 ```
 
 
-#### Male
+### Male
 
 ```{r male tsibble,results="asis"}
 ## male tsibble
@@ -547,17 +542,14 @@ p <- ECDC_plot(forecast_europe, europe)
 ggplotly(p)
 
 
-
-
-
-analysis_fun(forecast_europe, model_europe)
+analysis_fun(model_europe)
 
 
 ```
 
 
 
-#### Female
+### Female
 
 ```{r female tsibble,results="asis"}
 ## female tsibble
@@ -589,10 +581,7 @@ p <- ECDC_plot(forecast_europe, europe)
 ggplotly(p)
 
 
-
-
-
-analysis_fun(forecast_europe, model_europe)
+analysis_fun(model_europe)
 
 
 ```

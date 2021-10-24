@@ -248,9 +248,9 @@ for_fun <- function(europe, europe1719){
 }
 
 
-################################ analysis function ######################################
-analysis_fun <- function(forecast_europe, model_europe){
-  
+
+################################ excess function ########################################
+excess_fun <- function(forecast_europe){
   ## excess cases
   table_europe <- forecast_europe %>% as_tibble() %>% 
     select(week, observed, .mean, upper_95, lower_95) %>% 
@@ -318,15 +318,17 @@ analysis_fun <- function(forecast_europe, model_europe){
   
   ## table of each week with observed and predicted cases
   t <- rbind(table_2017, table_2018, table_2019, total_table) %>% 
-    kable(digits=c(0,0,0,0,0,1,0,1), "html", align="c", caption="Excess cases",
+    kable(digits=c(0,0,0,0,0,1,0,1), "html", align="c",
           col.names=c(" ", "Observed cases (O)", "Expected cases (E)", "Cases upper 95% PI", 
                       "O-E", "Percent change (%)", "Number", "Percent change (%)")) %>%
     kable_styling(bootstrap_options = c("striped", "hover")) %>%
     add_header_above(c(" "=4, "Cases above prediction"=2, "Cases above 95% PI"=2)) %>%
     column_spec(2:8, width=2)
   print(t)
-  
-  cat(paste("Model: ",paste(coef(model_europe)[1,1]),sep=""))
+}
+
+################################ analysis function ######################################
+analysis_fun <- function(model_europe){
   
   ##### The model & residuals
   t <- model_europe %>% coef() %>% as.data.frame() %>% select(-.model) %>%
@@ -334,23 +336,21 @@ analysis_fun <- function(forecast_europe, model_europe){
     kable_styling(bootstrap_options = c("striped", "condensed"))
   print(t)
   
-  t <- model_europe %>% glance() %>% select(-.model) %>% 
-    kable(digits=3) %>% kable_styling(bootstrap_options = c("striped", "condensed"))
-  print(t)
-  
 cat("\n")
 
-  p <- model_europe %>% gg_tsresiduals(lag_max=52) + ggtitle("Residual analysis")
+  p <- model_europe %>% gg_tsresiduals(lag_max=52) + ggtitle("Residuals")
   print(p)
   
-  ## Ljung-Box test
+  ## Tests
   t <- model_europe %>% augment() %>% features(.resid, ljung_box, lag=104) %>% 
-    kable(digits=3, caption="Ljung-Box test") %>% kable_styling(bootstrap_options = c("striped", "condensed"))
+    rename(Test=.model,"Statistic"=lb_stat, "P-value"=lb_pvalue) %>% 
+    rbind(model_europe %>% augment() %>% features(.resid, box_pierce, lag=104) %>% 
+            rename(Test=.model,"Statistic"=bp_stat, "P-value"=bp_pvalue)) %>%
+    mutate(Test=c("Ljung-Box test", "Box-Pierce test")) %>% 
+    kable(digits=3) %>% 
+    kable_styling(bootstrap_options = c("striped", "condensed"))
   print(t)
-  ## Box-Pierce test
-  t <- model_europe %>% augment() %>% features(.resid, box_pierce, lag=104) %>% 
-    kable(digits=3, caption="Box-Pierce test") %>% kable_styling(bootstrap_options = c("striped", "condensed"))
-  print(t)
+  
 }
 
 ##################### forecast 2019 function #############################
