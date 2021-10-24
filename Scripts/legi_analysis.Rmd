@@ -161,7 +161,7 @@ ggplotly(p)
 ## 2017-2019 retrospective prediction {.tabset}
 
 ### All cases {.tabset}
-#### Result
+#### Results
 ```{r europe tsibble, results="asis"}
 ## Europe tsibble
 europe <- legi_tsibble %>%
@@ -191,17 +191,15 @@ p <- ECDC_plot(forecast_europe, europe)
 ggplotly(p)
 
 excess_fun(forecast_europe)
-```
 
-#### Model
-```{r europe tsibble model, results="asis"}
+cat("#### Model & residuals \n")
 analysis_fun(model_europe)
 ```
 
 
 
-### Imported
-
+### Imported {.tabset}
+#### Results
 ```{r Imported tsibble, results="asis"}
 ## Imported tsibble
 europe <- legi_tsibble %>%
@@ -231,15 +229,15 @@ forecast_europe$observed <- europe1719$cases
 p <- ECDC_plot(forecast_europe, europe)
 ggplotly(p)
 
+excess_fun(forecast_europe)
 
-
+cat("#### Model & residuals \n")
 analysis_fun(model_europe)
-
 ```
 
 
-### Not imported
-
+### Not imported {.tabset}
+#### Results
 ```{r not imported tsibble, results="asis"}
 ## unknown tsibble
 europe <- legi_tsibble %>%
@@ -269,17 +267,16 @@ forecast_europe$observed <- europe1719$cases
 p <- ECDC_plot(forecast_europe, europe)
 ggplotly(p)
 
+excess_fun(forecast_europe)
 
-
+cat("#### Model & residuals \n")
 analysis_fun(model_europe)
-
-
 ```
 
 
 
-### <40
-
+### <40 {.tabset}
+#### Results
 ```{r age_40 tsibble, results="asis"}
 ## age_40 tsibble
 europe <- legi_tsibble %>%
@@ -309,14 +306,15 @@ forecast_europe$observed <- europe1719$cases
 p <- ECDC_plot(forecast_europe, europe)
 ggplotly(p)
 
+excess_fun(forecast_europe)
 
+cat("#### Model & residuals \n")
 analysis_fun(model_europe)
-
 ```
 
 
-### 40-49
-
+### 40-49 {.tabset}
+#### Results
 ```{r age_40_49 tsibble,results="asis"}
 ## age_40_49 tsibble
 europe <- legi_tsibble %>%
@@ -346,16 +344,15 @@ forecast_europe$observed <- europe1719$cases
 p <- ECDC_plot(forecast_europe, europe)
 ggplotly(p)
 
+excess_fun(forecast_europe)
 
-
+cat("#### Model & residuals \n")
 analysis_fun(model_europe)
-
-
 ```
 
 
-### 50-59
-
+### 50-59 {.tabset}
+#### Results
 ```{r age_50_59 tsibble,results="asis"}
 ## age_50_59 tsibble
 europe <- legi_tsibble %>%
@@ -385,16 +382,15 @@ forecast_europe$observed <- europe1719$cases
 p <- ECDC_plot(forecast_europe, europe)
 ggplotly(p)
 
+excess_fun(forecast_europe)
 
-
+cat("#### Model & residuals \n")
 analysis_fun(model_europe)
-
-
 ```
 
 
-### 60-69
-
+### 60-69 {.tabset}
+#### Results
 ```{r age_60_69 tsibble,results="asis"}
 ## age_60_69 tsibble
 europe <- legi_tsibble %>%
@@ -424,18 +420,15 @@ forecast_europe$observed <- europe1719$cases
 p <- ECDC_plot(forecast_europe, europe)
 ggplotly(p)
 
+excess_fun(forecast_europe)
 
-
-
-
+cat("#### Model & residuals \n")
 analysis_fun(model_europe)
-
-
 ```
 
 
-### 70-79
-
+### 70-79 {.tabset}
+#### Results
 ```{r age_70_79 tsibble,results="asis"}
 ## age_70_79 tsibble
 europe <- legi_tsibble %>%
@@ -465,14 +458,16 @@ forecast_europe$observed <- europe1719$cases
 p <- ECDC_plot(forecast_europe, europe)
 ggplotly(p)
 
-analysis_fun(model_europe)
+excess_fun(forecast_europe)
 
+cat("#### Model & residuals \n")
+analysis_fun(model_europe)
 ```
 
 
 
-### 80>=
-
+### 80>= {.tabset}
+#### Results
 ```{r age_80 tsibble,results="asis"}
 ## age_80 tsibble
 europe <- legi_tsibble %>%
@@ -502,15 +497,15 @@ forecast_europe$observed <- europe1719$cases
 p <- ECDC_plot(forecast_europe, europe)
 ggplotly(p)
 
+excess_fun(forecast_europe)
 
-
+cat("#### Model & residuals \n")
 analysis_fun(model_europe)
-
-
 ```
 
 
-### Male
+### Male {.tabset}
+#### Results
 
 ```{r male tsibble,results="asis"}
 ## male tsibble
@@ -541,16 +536,16 @@ forecast_europe$observed <- europe1719$cases
 p <- ECDC_plot(forecast_europe, europe)
 ggplotly(p)
 
+excess_fun(forecast_europe)
 
+cat("#### Model & residuals \n")
 analysis_fun(model_europe)
-
-
 ```
 
 
 
-### Female
-
+### Female {.tabset}
+#### Results
 ```{r female tsibble,results="asis"}
 ## female tsibble
 europe <- legi_tsibble %>%
@@ -580,17 +575,18 @@ forecast_europe$observed <- europe1719$cases
 p <- ECDC_plot(forecast_europe, europe)
 ggplotly(p)
 
+excess_fun(forecast_europe)
 
+cat("#### Model & residuals \n")
 analysis_fun(model_europe)
-
-
 ```
 
 
 
 
 ## Interrupted time series {.tabset}
-### All cases
+### All cases {.tabset}
+#### Results
 ```{r its analysis,results="asis"}
 ## Europe tsibble
 europe <- legi_tsibble %>%
@@ -602,20 +598,19 @@ europe1719 <- europe %>%
 its_fun(europe)
 ggplotly(p)
 
-
-
-
 its_table %>% 
   kable(col.names=c("Term", "Estimate", "95% Confidence interval", "P-value"), 
-        digits=3) %>%
+        digits=3, caption="Regression results") %>%
     kable_styling(bootstrap_options = c("striped", "condensed"))
+
+cat("#### Residuals \n")
 checkresiduals(its_model)
 ```
 
 
 
-### Imported 
-
+### Imported {.tabset}
+#### Results
 ```{r its Imported,results="asis"}
 ## Imported tsibble
 Imported <- legi_tsibble %>%
@@ -628,22 +623,19 @@ Imported2018 <- Imported %>%
 its_fun(Imported)
 ggplotly(p)
 
-
-
-
-
 its_table %>% 
   kable(col.names=c("Term", "Estimate", "95% Confidence interval", "P-value"), 
-        digits=3) %>%
+        digits=3, caption="Regression results") %>%
     kable_styling(bootstrap_options = c("striped", "condensed"))
+
+cat("#### Residuals \n")
 checkresiduals(its_model)
-
-
 ```
 
 
 
-### Not imported
+### Not imported {.tabset}
+#### Results
 ```{r its Not imported,results="asis"}
 ## unknown tsibble
 unknown <- legi_tsibble %>%
@@ -656,21 +648,18 @@ unknown2018 <- unknown %>%
 its_fun(unknown)
 ggplotly(p)
 
-
-
-
-
 its_table %>% 
   kable(col.names=c("Term", "Estimate", "95% Confidence interval", "P-value"), 
-        digits=3) %>%
+        digits=3, caption="Regression results") %>%
     kable_styling(bootstrap_options = c("striped", "condensed"))
+
+cat("#### Residuals \n")
 checkresiduals(its_model)
-
-
 ```
 
 
-### <40
+### <40 {.tabset}
+#### Results
 ```{r its age40,results="asis"}
 ## age40 tsibble
 age40 <- legi_tsibble %>%
@@ -683,19 +672,17 @@ age402018 <- age40 %>%
 its_fun(age40)
 ggplotly(p)
 
-
-
-
 its_table %>% 
   kable(col.names=c("Term", "Estimate", "95% Confidence interval", "P-value"), 
-        digits=3) %>%
+        digits=3, caption="Regression results") %>%
     kable_styling(bootstrap_options = c("striped", "condensed"))
+
+cat("#### Residuals \n")
 checkresiduals(its_model)
-
-
 ```
 
-### 40-49
+### 40-49 {.tabset}
+#### Results
 ```{r its age4049,results="asis"}
 ## age4049 tsibble
 age4049 <- legi_tsibble %>%
@@ -708,19 +695,17 @@ age40492018 <- age4049 %>%
 its_fun(age4049)
 ggplotly(p)
 
-
-
-
-
 its_table %>% 
   kable(col.names=c("Term", "Estimate", "95% Confidence interval", "P-value"), 
-        digits=3) %>%
+        digits=3, caption="Regression results") %>%
     kable_styling(bootstrap_options = c("striped", "condensed"))
-checkresiduals(its_model)
 
+cat("#### Residuals \n")
+checkresiduals(its_model)
 ```
 
-### 50-59
+### 50-59 {.tabset}
+#### Results
 ```{r its age5059,results="asis"}
 ## age5059 tsibble
 age5059 <- legi_tsibble %>%
@@ -733,18 +718,17 @@ age50592018 <- age5059 %>%
 its_fun(age5059)
 ggplotly(p)
 
-
-
 its_table %>% 
   kable(col.names=c("Term", "Estimate", "95% Confidence interval", "P-value"), 
-        digits=3) %>%
+        digits=3, caption="Regression results") %>%
     kable_styling(bootstrap_options = c("striped", "condensed"))
+
+cat("#### Residuals \n")
 checkresiduals(its_model)
-
-
 ```
 
-### 60-69
+### 60-69 {.tabset}
+#### Results
 ```{r its age6069,results="asis"}
 ## age6069 tsibble
 age6069 <- legi_tsibble %>%
@@ -757,19 +741,17 @@ age60692018 <- age6069 %>%
 its_fun(age6069)
 ggplotly(p)
 
-
-
-
 its_table %>% 
   kable(col.names=c("Term", "Estimate", "95% Confidence interval", "P-value"), 
-        digits=3) %>%
+        digits=3, caption="Regression results") %>%
     kable_styling(bootstrap_options = c("striped", "condensed"))
+
+cat("#### Residuals \n")
 checkresiduals(its_model)
-
-
 ```
 
-### 70-79
+### 70-79 {.tabset}
+#### Results
 ```{r its age7079,results="asis"}
 ## age7079 tsibble
 age7079 <- legi_tsibble %>%
@@ -782,18 +764,17 @@ age70792018 <- age7079 %>%
 its_fun(age7079)
 ggplotly(p)
 
-
-
 its_table %>% 
   kable(col.names=c("Term", "Estimate", "95% Confidence interval", "P-value"), 
-        digits=3) %>%
+        digits=3, caption="Regression results") %>%
     kable_styling(bootstrap_options = c("striped", "condensed"))
+
+cat("#### Residuals \n")
 checkresiduals(its_model)
-
-
 ```
 
-### 80>=
+### 80>= {.tabset}
+#### Results
 ```{r its age80,results="asis"}
 ## age80 tsibble
 age80 <- legi_tsibble %>%
@@ -806,19 +787,17 @@ age802018 <- age80 %>%
 its_fun(age80)
 ggplotly(p)
 
-
-
-
 its_table %>% 
   kable(col.names=c("Term", "Estimate", "95% Confidence interval", "P-value"), 
-        digits=3) %>%
+        digits=3, caption="Regression results") %>%
     kable_styling(bootstrap_options = c("striped", "condensed"))
+
+cat("#### Residuals \n")
 checkresiduals(its_model)
-
-
 ```
 
-### Male
+### Male {.tabset}
+#### Results
 ```{r its male,results="asis"}
 ## male tsibble
 male <- legi_tsibble %>%
@@ -831,18 +810,17 @@ male2018 <- male %>%
 its_fun(male)
 ggplotly(p)
 
-
-
-
 its_table %>% 
   kable(col.names=c("Term", "Estimate", "95% Confidence interval", "P-value"), 
-        digits=3) %>%
+        digits=3, caption="Regression results") %>%
     kable_styling(bootstrap_options = c("striped", "condensed"))
-checkresiduals(its_model)
 
+cat("#### Residuals \n")
+checkresiduals(its_model)
 ```
 
-### Female
+### Female {.tabset}
+#### Results
 ```{r its female,results="asis"}
 ## female tsibble
 female <- legi_tsibble %>%
@@ -855,14 +833,11 @@ female2018 <- female %>%
 its_fun(female)
 ggplotly(p)
 
-
-
-
-
 its_table %>% 
   kable(col.names=c("Term", "Estimate", "95% Confidence interval", "P-value"), 
-        digits=3) %>%
+        digits=3, caption="Regression results") %>%
     kable_styling(bootstrap_options = c("striped", "condensed"))
-checkresiduals(its_model)
 
+cat("#### Residuals \n")
+checkresiduals(its_model)
 ```
