@@ -151,8 +151,8 @@ ECDC_plot_old <- function(forecast_model, country){
                                           "Observed" = rgb(101,179,46,maxColorValue = 255))) +
     scale_fill_manual("ribbons", values=c("95% PI" = rgb(225,167,68,maxColorValue = 255),
                                           "80% PI" = rgb(241,214,118,maxColorValue = 255))) +
-    theme(axis.text=element_text(size=12),
-          axis.title=element_text(size=13)) +    #Axis text style
+    theme(axis.text=element_text(size=10),
+          axis.title=element_text(size=12)) +    #Axis text style
     theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), 
           panel.background = element_blank()) +  #Empty backgroud
     theme(axis.line = element_line(colour = "#767171") ) +
@@ -197,10 +197,10 @@ ECDC_plot <- function(forecast_model, country){
                                           "80% PI" = rgb(241,214,118,maxColorValue = 255),
                                           "Predicted" = rgb(204,107,33,maxColorValue = 255),
                                           "Observed" = rgb(101,179,46,maxColorValue = 255))) +
-    theme(axis.text=element_text(size=12),
-          axis.title=element_text(size=13)) +    #Axis text style
+    theme(axis.text=element_text(size=10),
+          axis.title=element_text(size=12)) +    #Axis text style
     theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), 
-          panel.background = element_blank()) +  #Empty backgroud
+          panel.background = element_blank(), plot.title = element_text(size=12)) +  #Empty backgroud
     theme(axis.line = element_line(colour = "#767171") ) +
     theme(legend.position = "right", legend.title =element_blank(), legend.text =element_text(size=12),
           legend.key=element_blank(), legend.key.width = unit(0.8, "cm")) +
@@ -480,8 +480,8 @@ its_fun <- function(europe){
     theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
           panel.background = element_blank(), legend.key=element_blank(), legend.title=element_blank()) +
     theme(axis.line = element_line(colour = "#767171")) +
-    theme(axis.text=element_text(size=12),
-          axis.title=element_text(size=13)) +    #Axis text style
+    theme(axis.text=element_text(size=10), plot.title = element_text(size=12),
+          axis.title=element_text(size=12)) +    #Axis text style
     theme(legend.position = "right", legend.title =element_blank(), legend.text =element_text(size=12),
           legend.key=element_blank(), legend.key.width = unit(0.8, "cm")) +
     scale_y_continuous(expand = c(0, 0)) +

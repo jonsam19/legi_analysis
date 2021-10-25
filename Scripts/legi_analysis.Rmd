@@ -1,5 +1,5 @@
 ---
-title: "Legionnaires' disease 2012-2019"
+title: "Legionnaires’ disease in Europe: increasing trend in 2017-2019"
 output:
   html_document:
   html_notebook:
@@ -140,20 +140,55 @@ genders <- unique(legi_tsibble$Gender)[!is.na(unique(legi_tsibble$Gender)) &
 
 
 # {.tabset}
-$~$
 
-## Heat map
+## Overview 2012-2019 {.tabset}
+### Time series
+```{r time series, results="asis"}
+europe <- legi_tsibble %>%
+  summarise(cases=sum(nb))
 
+## create plot
+p <- ggplot() +
+    geom_line(europe, 
+              mapping=aes(x=as.Date(week), y=cases, colour="LD cases"), size=1) +
+    scale_x_date(date_labels = "  %Y", date_breaks= "1 year", expand = c(0, 0),
+                 limits=c(as.Date("2012-01-01"),as.Date("2020-01-01"))) + 
+    scale_y_continuous(expand = c(0, 0)) +
+    coord_cartesian(ylim=c(0, NA)) +
+    ylab("Cases") + xlab("Year") +
+    scale_colour_manual("lines", values=c("LD cases" = rgb(101,179,46,maxColorValue = 255))) +
+    theme(axis.text=element_text(size=10),
+          axis.title=element_text(size=12)) +    #Axis text style
+    theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), 
+          panel.background = element_blank()) +  #Empty backgroud
+    theme(axis.line = element_line(colour = "#767171") ) +
+    theme(legend.position = "right", legend.title =element_blank(), 
+          legend.text =element_text(size=12), plot.title = element_text(size=12),
+          legend.key=element_blank(), legend.key.width = unit(0.8, "cm")) +
+    guides(fill=guide_legend(reverse=TRUE), colour=guide_legend(reverse=TRUE)) +
+  ggtitle("Weekly LD cases by date of onset, EU/EEA, 2012-2019")
+ggplotly(p)
+```
+
+
+### Heat map
 ```{r heatmap,results="asis"}
-europe_heat <- legi_tsibble %>% summarise(cases=sum(nb)) %>% as_tibble() %>%  
+europe_heat <- legi_tsibble %>% summarise(Cases=sum(nb)) %>% as_tibble() %>%  
   mutate(year=year(week), year=as.character(year), year=reorder(year, desc(year)),
-         week=as.character(week), week=substring(week,7))
-p <- europe_heat %>% ggplot(aes(week, year, fill=cases)) +
-  geom_tile(colour="white") + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+         week=as.character(week), week=substring(week,7), week=as.numeric(week))
+
+p <- europe_heat %>% ggplot(aes(week, year, fill=Cases)) +
+  geom_tile(colour="white") + 
+  scale_x_continuous(breaks=c(1,13,26,38,50), expand = c(0, 0)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
         panel.background = element_blank()) +
-  scale_fill_gradient2(low=rgb(241, 214, 118,maxColorValue = 255), mid=rgb(204, 107, 33,maxColorValue = 255), 
-                       high=rgb(124, 23, 15,maxColorValue = 255), na.value="transparent", midpoint=250) +
-  xlab(NULL) + ylab(NULL) + ggtitle("Heat map of weekly LD cases by date of onset")
+  theme(axis.text=element_text(size=10), plot.title = element_text(size=12),
+          axis.title=element_text(size=12)) +    #Axis text style
+  scale_fill_gradient2(low=rgb(241, 214, 118,maxColorValue = 255), 
+                       mid=rgb(204, 107, 33,maxColorValue = 255),
+                       high=rgb(124, 23, 15,maxColorValue = 255), 
+                       na.value="transparent", midpoint=250) +
+  xlab("Week") + ylab("Year") + ggtitle("Weekly LD cases by date of onset, EU/EEA, 2012-2019")
 ggplotly(p)
 ```
 
@@ -187,7 +222,9 @@ forecast_europe <- forecast(model_europe,h=156) %>%
 forecast_europe$observed <- europe1719$cases
 
 ## plot the foreacst
-p <- ECDC_plot(forecast_europe, europe)
+p <- ECDC_plot(forecast_europe, europe) +
+  ggtitle("Weekly LD cases by date of onset (2012-2019) with retrospective prediction of 2017-2019 
+          based on a 2012-2016 model, EU/EEA")
 ggplotly(p)
 
 excess_fun(forecast_europe)
@@ -226,7 +263,9 @@ forecast_europe <- forecast(model_europe,h=156) %>%
 forecast_europe$observed <- europe1719$cases
 
 ## plot the foreacst
-p <- ECDC_plot(forecast_europe, europe)
+p <- ECDC_plot(forecast_europe, europe) +
+  ggtitle("Weekly LD cases by date of onset (2012-2019) with retrospective prediction of 2017-2019 
+  based on a 2012-2016 model, imported cases, EU/EEA")
 ggplotly(p)
 
 excess_fun(forecast_europe)
@@ -264,7 +303,9 @@ forecast_europe <- forecast(model_europe,h=156) %>%
 forecast_europe$observed <- europe1719$cases
 
 ## plot the foreacst
-p <- ECDC_plot(forecast_europe, europe)
+p <- ECDC_plot(forecast_europe, europe) +
+  ggtitle("Weekly LD cases by date of onset (2012-2019) with retrospective prediction of 2017-2019 
+  based on a 2012-2016 model, domestic cases, EU/EEA")
 ggplotly(p)
 
 excess_fun(forecast_europe)
@@ -303,7 +344,9 @@ forecast_europe <- forecast(model_europe,h=156) %>%
 forecast_europe$observed <- europe1719$cases
 
 ## plot the foreacst
-p <- ECDC_plot(forecast_europe, europe)
+p <- ECDC_plot(forecast_europe, europe) +
+  ggtitle("Weekly LD cases by date of onset (2012-2019) with retrospective prediction of 2017-2019 
+  based on a 2012-2016 model, age <40, EU/EEA")
 ggplotly(p)
 
 excess_fun(forecast_europe)
@@ -341,7 +384,9 @@ forecast_europe <- forecast(model_europe,h=156) %>%
 forecast_europe$observed <- europe1719$cases
 
 ## plot the foreacst
-p <- ECDC_plot(forecast_europe, europe)
+p <- ECDC_plot(forecast_europe, europe) +
+  ggtitle("Weekly LD cases by date of onset (2012-2019) with retrospective prediction of 2017-2019 
+  based on a 2012-2016 model, age 40-49, EU/EEA")
 ggplotly(p)
 
 excess_fun(forecast_europe)
@@ -379,7 +424,9 @@ forecast_europe <- forecast(model_europe,h=156) %>%
 forecast_europe$observed <- europe1719$cases
 
 ## plot the foreacst
-p <- ECDC_plot(forecast_europe, europe)
+p <- ECDC_plot(forecast_europe, europe) +
+  ggtitle("Weekly LD cases by date of onset (2012-2019) with retrospective prediction of 2017-2019 
+  based on a 2012-2016 model, age 50-59, EU/EEA")
 ggplotly(p)
 
 excess_fun(forecast_europe)
@@ -417,7 +464,9 @@ forecast_europe <- forecast(model_europe,h=156) %>%
 forecast_europe$observed <- europe1719$cases
 
 ## plot the foreacst
-p <- ECDC_plot(forecast_europe, europe)
+p <- ECDC_plot(forecast_europe, europe) +
+  ggtitle("Weekly LD cases by date of onset (2012-2019) with retrospective prediction of 2017-2019 
+  based on a 2012-2016 model, age 60-69, EU/EEA")
 ggplotly(p)
 
 excess_fun(forecast_europe)
@@ -455,7 +504,9 @@ forecast_europe <- forecast(model_europe,h=156) %>%
 forecast_europe$observed <- europe1719$cases
 
 ## plot the foreacst
-p <- ECDC_plot(forecast_europe, europe)
+p <- ECDC_plot(forecast_europe, europe) +
+  ggtitle("Weekly LD cases by date of onset (2012-2019) with retrospective prediction of 2017-2019 
+  based on a 2012-2016 model, age 70-79, EU/EEA")
 ggplotly(p)
 
 excess_fun(forecast_europe)
@@ -466,7 +517,7 @@ analysis_fun(model_europe)
 
 
 
-### 80>= {.tabset}
+### 80+ {.tabset}
 #### Results
 ```{r age_80 tsibble,results="asis"}
 ## age_80 tsibble
@@ -494,7 +545,9 @@ forecast_europe <- forecast(model_europe,h=156) %>%
 forecast_europe$observed <- europe1719$cases
 
 ## plot the foreacst
-p <- ECDC_plot(forecast_europe, europe)
+p <- ECDC_plot(forecast_europe, europe) +
+  ggtitle("Weekly LD cases by date of onset (2012-2019) with retrospective prediction of 2017-2019 
+  based on a 2012-2016 model, age 80+, EU/EEA")
 ggplotly(p)
 
 excess_fun(forecast_europe)
@@ -533,7 +586,9 @@ forecast_europe <- forecast(model_europe,h=156) %>%
 forecast_europe$observed <- europe1719$cases
 
 ## plot the foreacst
-p <- ECDC_plot(forecast_europe, europe)
+p <- ECDC_plot(forecast_europe, europe) +
+  ggtitle("Weekly LD cases by date of onset (2012-2019) with retrospective prediction of 2017-2019 
+  based on a 2012-2016 model, males, EU/EEA")
 ggplotly(p)
 
 excess_fun(forecast_europe)
@@ -572,7 +627,9 @@ forecast_europe <- forecast(model_europe,h=156) %>%
 forecast_europe$observed <- europe1719$cases
 
 ## plot the foreacst
-p <- ECDC_plot(forecast_europe, europe)
+p <- ECDC_plot(forecast_europe, europe) +
+  ggtitle("Weekly LD cases by date of onset (2012-2019) with retrospective prediction of 2017-2019 
+  based on a 2012-2016 model, females, EU/EEA")
 ggplotly(p)
 
 excess_fun(forecast_europe)
@@ -583,8 +640,7 @@ analysis_fun(model_europe)
 
 
 
-
-## Interrupted time series {.tabset}
+## 2017 interrupted time series {.tabset}
 ### All cases {.tabset}
 #### Results
 ```{r its analysis,results="asis"}
@@ -596,7 +652,7 @@ europe1719 <- europe %>%
   filter_index("2017 W01"~.)
 
 its_fun(europe)
-ggplotly(p)
+ggplotly(p + ggtitle("Weekly LD cases by date of onset (2012-2019) with ITS trend line, EU/EEA"))
 
 its_table %>% 
   kable(col.names=c("Term", "Estimate", "95% Confidence interval", "P-value"), 
@@ -604,7 +660,7 @@ its_table %>%
     kable_styling(bootstrap_options = c("striped", "condensed"))
 
 cat("#### Residuals \n")
-checkresiduals(its_model)
+residuals <- checkresiduals(its_model)
 ```
 
 
@@ -621,7 +677,7 @@ Imported2018 <- Imported %>%
   filter_index("2017 W01"~.)
 
 its_fun(Imported)
-ggplotly(p)
+ggplotly(p + ggtitle("Weekly LD cases by date of onset (2012-2019) with ITS trend line, imported, EU/EEA"))
 
 its_table %>% 
   kable(col.names=c("Term", "Estimate", "95% Confidence interval", "P-value"), 
@@ -646,7 +702,7 @@ unknown2018 <- unknown %>%
   filter_index("2017 W01"~.)
 
 its_fun(unknown)
-ggplotly(p)
+ggplotly(p + ggtitle("Weekly LD cases by date of onset (2012-2019) with ITS trend line, domestic, EU/EEA"))
 
 its_table %>% 
   kable(col.names=c("Term", "Estimate", "95% Confidence interval", "P-value"), 
@@ -670,7 +726,7 @@ age402018 <- age40 %>%
   filter_index("2017 W01"~.)
 
 its_fun(age40)
-ggplotly(p)
+ggplotly(p + ggtitle("Weekly LD cases by date of onset (2012-2019) with ITS trend line, age <40, EU/EEA"))
 
 its_table %>% 
   kable(col.names=c("Term", "Estimate", "95% Confidence interval", "P-value"), 
@@ -693,7 +749,7 @@ age40492018 <- age4049 %>%
   filter_index("2017 W01"~.)
 
 its_fun(age4049)
-ggplotly(p)
+ggplotly(p + ggtitle("Weekly LD cases by date of onset (2012-2019) with ITS trend line, age 40-49, EU/EEA"))
 
 its_table %>% 
   kable(col.names=c("Term", "Estimate", "95% Confidence interval", "P-value"), 
@@ -716,7 +772,7 @@ age50592018 <- age5059 %>%
   filter_index("2017 W01"~.)
 
 its_fun(age5059)
-ggplotly(p)
+ggplotly(p + ggtitle("Weekly LD cases by date of onset (2012-2019) with ITS trend line, age 50-59, EU/EEA"))
 
 its_table %>% 
   kable(col.names=c("Term", "Estimate", "95% Confidence interval", "P-value"), 
@@ -739,7 +795,7 @@ age60692018 <- age6069 %>%
   filter_index("2017 W01"~.)
 
 its_fun(age6069)
-ggplotly(p)
+ggplotly(p + ggtitle("Weekly LD cases by date of onset (2012-2019) with ITS trend line, age 60-69, EU/EEA"))
 
 its_table %>% 
   kable(col.names=c("Term", "Estimate", "95% Confidence interval", "P-value"), 
@@ -762,7 +818,7 @@ age70792018 <- age7079 %>%
   filter_index("2017 W01"~.)
 
 its_fun(age7079)
-ggplotly(p)
+ggplotly(p + ggtitle("Weekly LD cases by date of onset (2012-2019) with ITS trend line, age 70-79, EU/EEA"))
 
 its_table %>% 
   kable(col.names=c("Term", "Estimate", "95% Confidence interval", "P-value"), 
@@ -773,7 +829,7 @@ cat("#### Residuals \n")
 checkresiduals(its_model)
 ```
 
-### 80>= {.tabset}
+### 80+ {.tabset}
 #### Results
 ```{r its age80,results="asis"}
 ## age80 tsibble
@@ -785,7 +841,7 @@ age802018 <- age80 %>%
   filter_index("2017 W01"~.)
 
 its_fun(age80)
-ggplotly(p)
+ggplotly(p + ggtitle("Weekly LD cases by date of onset (2012-2019) with ITS trend line, age 80+, EU/EEA"))
 
 its_table %>% 
   kable(col.names=c("Term", "Estimate", "95% Confidence interval", "P-value"), 
@@ -808,7 +864,7 @@ male2018 <- male %>%
   filter_index("2017 W01"~.)
 
 its_fun(male)
-ggplotly(p)
+ggplotly(p + ggtitle("Weekly LD cases by date of onset (2012-2019) with ITS trend line, males, EU/EEA"))
 
 its_table %>% 
   kable(col.names=c("Term", "Estimate", "95% Confidence interval", "P-value"), 
@@ -831,7 +887,7 @@ female2018 <- female %>%
   filter_index("2017 W01"~.)
 
 its_fun(female)
-ggplotly(p)
+ggplotly(p + ggtitle("Weekly LD cases by date of onset (2012-2019) with ITS trend line, females, EU/EEA"))
 
 its_table %>% 
   kable(col.names=c("Term", "Estimate", "95% Confidence interval", "P-value"), 
