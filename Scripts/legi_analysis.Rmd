@@ -1,7 +1,6 @@
 ---
 title: "Legionnaires’ disease in Europe: increasing trend in 2017-2019"
-output:
-  rmdformats::readthedown:
+output: flexdashboard::flex_dashboard
 editor_options:
   chunk_output_type: console
 ---
@@ -21,6 +20,7 @@ library(DT)
 library(plotly)
 library(forecast)
 library(janitor)
+library(flexdashboard)
 
 ## setting working directory   
 PATH="C:/R/legi_analysis"
@@ -137,7 +137,10 @@ genders <- unique(legi_tsibble$Gender)[!is.na(unique(legi_tsibble$Gender)) &
 ```
 
 
-## Overview 2012-2019 {.tabset}
+Overview 2012-2019
+==================
+Time series {.tabset}
+------------------
 ### Time series
 ```{r time series, results="asis"}
 europe <- legi_tsibble %>%
@@ -188,9 +191,13 @@ p <- europe_heat %>% ggplot(aes(week, year, fill=Cases)) +
 ggplotly(p)
 ```
 
+Abstract {data-width=300}
+------------------
+Abstract here
 
-## 2017-2019 retrospective prediction {.tabset}
-
+2017-2019 retrospective prediction
+==================
+## Retrospective prediction {.tabset}
 ### All cases {.tabset}
 #### Results
 ```{r europe tsibble, results="asis"}
@@ -199,11 +206,9 @@ europe <- legi_tsibble %>%
   summarise(cases=sum(nb))
 europe1719 <- europe %>%
   filter_index("2017 W01"~.)
-
 ## fit best model
 model_europe <- filter_index(europe,.~"2016 W52") %>%
   model(ARIMA(log(cases+1)~fourier(K=3)+1+pdq(1,1,1)+PDQ(0,0,0)))
-
 ## create forecast
 forecast_europe <- forecast(model_europe,h=156) %>% 
   ## include 80% and 90% confidence intervals
@@ -213,18 +218,14 @@ forecast_europe <- forecast(model_europe,h=156) %>%
     upper_80 = '80%_upper',
     lower_95 = '95%_lower',
     lower_80 = '80%_lower')
-
 ## add observed cases for 2018 to forecast
 forecast_europe$observed <- europe1719$cases
-
 ## plot the foreacst
 p <- ECDC_plot(forecast_europe, europe) +
   ggtitle("Weekly LD cases by date of onset (2012-2019) with retrospective prediction of 2017-2019 
           based on a 2012-2016 model, EU/EEA")
 ggplotly(p)
-
 excess_fun(forecast_europe)
-
 cat("#### Model & residuals \n")
 analysis_fun(model_europe)
 ```
@@ -240,11 +241,9 @@ europe <- legi_tsibble %>%
   summarise(cases=sum(nb))
 europe1719 <- europe %>%
   filter_index("2017 W01"~.)
-
 ## fit best model
 model_europe <- filter_index(europe,.~"2016 W52") %>%
   model(ARIMA(log(cases+1)~fourier(K=7)+0+pdq(0,1,1)+PDQ(0,0,0)))
-
 ## create forecast for 2018
 forecast_europe <- forecast(model_europe,h=156) %>% 
   ## include 80% and 90% confidence intervals
@@ -254,18 +253,14 @@ forecast_europe <- forecast(model_europe,h=156) %>%
     upper_80 = '80%_upper',
     lower_95 = '95%_lower',
     lower_80 = '80%_lower')
-
 ## add observed cases for 2018 to forecast
 forecast_europe$observed <- europe1719$cases
-
 ## plot the foreacst
 p <- ECDC_plot(forecast_europe, europe) +
   ggtitle("Weekly LD cases by date of onset (2012-2019) with retrospective prediction of 2017-2019 
   based on a 2012-2016 model, imported cases, EU/EEA")
 ggplotly(p)
-
 excess_fun(forecast_europe)
-
 cat("#### Model & residuals \n")
 analysis_fun(model_europe)
 ```
@@ -280,11 +275,9 @@ europe <- legi_tsibble %>%
   summarise(cases=sum(nb))
 europe1719 <- europe %>%
   filter_index("2017 W01"~.)
-
 ## fit best model
 model_europe <- filter_index(europe,.~"2016 W52") %>%
   model(ARIMA(log(cases+1)~fourier(K=3)+1+pdq(1,1,1)+PDQ(0,0,0)))
-
 ## create forecast for 2018
 forecast_europe <- forecast(model_europe,h=156) %>% 
   ## include 80% and 90% confidence intervals
@@ -294,18 +287,14 @@ forecast_europe <- forecast(model_europe,h=156) %>%
     upper_80 = '80%_upper',
     lower_95 = '95%_lower',
     lower_80 = '80%_lower')
-
 ## add observed cases for 2018 to forecast
 forecast_europe$observed <- europe1719$cases
-
 ## plot the foreacst
 p <- ECDC_plot(forecast_europe, europe) +
   ggtitle("Weekly LD cases by date of onset (2012-2019) with retrospective prediction of 2017-2019 
   based on a 2012-2016 model, domestic cases, EU/EEA")
 ggplotly(p)
-
 excess_fun(forecast_europe)
-
 cat("#### Model & residuals \n")
 analysis_fun(model_europe)
 ```
@@ -321,11 +310,9 @@ europe <- legi_tsibble %>%
   summarise(cases=sum(nb))
 europe1719 <- europe %>%
   filter_index("2017 W01"~.)
-
 ## fit best model
 model_europe <- filter_index(europe,.~"2016 W52") %>%
   model(ARIMA(log(cases+1)~fourier(K=3)+1+pdq(0,0,0)+PDQ(0,0,0)))
-
 ## create forecast for 2018
 forecast_europe <- forecast(model_europe,h=156) %>% 
   ## include 80% and 90% confidence intervals
@@ -335,18 +322,14 @@ forecast_europe <- forecast(model_europe,h=156) %>%
     upper_80 = '80%_upper',
     lower_95 = '95%_lower',
     lower_80 = '80%_lower')
-
 ## add observed cases for 2018 to forecast
 forecast_europe$observed <- europe1719$cases
-
 ## plot the foreacst
 p <- ECDC_plot(forecast_europe, europe) +
   ggtitle("Weekly LD cases by date of onset (2012-2019) with retrospective prediction of 2017-2019 
   based on a 2012-2016 model, age <40, EU/EEA")
 ggplotly(p)
-
 excess_fun(forecast_europe)
-
 cat("#### Model & residuals \n")
 analysis_fun(model_europe)
 ```
@@ -361,11 +344,9 @@ europe <- legi_tsibble %>%
   summarise(cases=sum(nb))
 europe1719 <- europe %>%
   filter_index("2017 W01"~.)
-
 ## fit best model
 model_europe <- filter_index(europe,.~"2016 W52") %>%
   model(ARIMA(log(cases+1)~fourier(K=4)+1+pdq(1,0,0)+PDQ(0,0,0)))
-
 ## create forecast for 2018
 forecast_europe <- forecast(model_europe,h=156) %>% 
   ## include 80% and 90% confidence intervals
@@ -375,18 +356,14 @@ forecast_europe <- forecast(model_europe,h=156) %>%
     upper_80 = '80%_upper',
     lower_95 = '95%_lower',
     lower_80 = '80%_lower')
-
 ## add observed cases for 2018 to forecast
 forecast_europe$observed <- europe1719$cases
-
 ## plot the foreacst
 p <- ECDC_plot(forecast_europe, europe) +
   ggtitle("Weekly LD cases by date of onset (2012-2019) with retrospective prediction of 2017-2019 
   based on a 2012-2016 model, age 40-49, EU/EEA")
 ggplotly(p)
-
 excess_fun(forecast_europe)
-
 cat("#### Model & residuals \n")
 analysis_fun(model_europe)
 ```
@@ -401,11 +378,9 @@ europe <- legi_tsibble %>%
   summarise(cases=sum(nb))
 europe1719 <- europe %>%
   filter_index("2017 W01"~.)
-
 ## fit best model
 model_europe <- filter_index(europe,.~"2016 W52") %>%
   model(ARIMA(log(cases+1)~fourier(K=3)+1+pdq(1,1,3)+PDQ(0,0,0)))
-
 ## create forecast for 2018
 forecast_europe <- forecast(model_europe,h=156) %>% 
   ## include 80% and 90% confidence intervals
@@ -415,18 +390,14 @@ forecast_europe <- forecast(model_europe,h=156) %>%
     upper_80 = '80%_upper',
     lower_95 = '95%_lower',
     lower_80 = '80%_lower')
-
 ## add observed cases for 2018 to forecast
 forecast_europe$observed <- europe1719$cases
-
 ## plot the foreacst
 p <- ECDC_plot(forecast_europe, europe) +
   ggtitle("Weekly LD cases by date of onset (2012-2019) with retrospective prediction of 2017-2019 
   based on a 2012-2016 model, age 50-59, EU/EEA")
 ggplotly(p)
-
 excess_fun(forecast_europe)
-
 cat("#### Model & residuals \n")
 analysis_fun(model_europe)
 ```
@@ -441,11 +412,9 @@ europe <- legi_tsibble %>%
   summarise(cases=sum(nb))
 europe1719 <- europe %>%
   filter_index("2017 W01"~.)
-
 ## fit best model
 model_europe <- filter_index(europe,.~"2016 W52") %>%
   model(ARIMA(log(cases+1)~fourier(K=3)+1+pdq(1,1,1)+PDQ(0,0,0)))
-
 ## create forecast for 2018
 forecast_europe <- forecast(model_europe,h=156) %>% 
   ## include 80% and 90% confidence intervals
@@ -455,18 +424,14 @@ forecast_europe <- forecast(model_europe,h=156) %>%
     upper_80 = '80%_upper',
     lower_95 = '95%_lower',
     lower_80 = '80%_lower')
-
 ## add observed cases for 2018 to forecast
 forecast_europe$observed <- europe1719$cases
-
 ## plot the foreacst
 p <- ECDC_plot(forecast_europe, europe) +
   ggtitle("Weekly LD cases by date of onset (2012-2019) with retrospective prediction of 2017-2019 
   based on a 2012-2016 model, age 60-69, EU/EEA")
 ggplotly(p)
-
 excess_fun(forecast_europe)
-
 cat("#### Model & residuals \n")
 analysis_fun(model_europe)
 ```
@@ -481,11 +446,9 @@ europe <- legi_tsibble %>%
   summarise(cases=sum(nb))
 europe1719 <- europe %>%
   filter_index("2017 W01"~.)
-
 ## fit best model
 model_europe <- filter_index(europe,.~"2016 W52") %>%
   model(ARIMA(log(cases+1)~fourier(K=3)+1+pdq(0,1,2)+PDQ(0,0,0)))
-
 ## create forecast for 2018
 forecast_europe <- forecast(model_europe,h=156) %>% 
   ## include 80% and 90% confidence intervals
@@ -495,18 +458,14 @@ forecast_europe <- forecast(model_europe,h=156) %>%
     upper_80 = '80%_upper',
     lower_95 = '95%_lower',
     lower_80 = '80%_lower')
-
 ## add observed cases for 2018 to forecast
 forecast_europe$observed <- europe1719$cases
-
 ## plot the foreacst
 p <- ECDC_plot(forecast_europe, europe) +
   ggtitle("Weekly LD cases by date of onset (2012-2019) with retrospective prediction of 2017-2019 
   based on a 2012-2016 model, age 70-79, EU/EEA")
 ggplotly(p)
-
 excess_fun(forecast_europe)
-
 cat("#### Model & residuals \n")
 analysis_fun(model_europe)
 ```
@@ -522,11 +481,9 @@ europe <- legi_tsibble %>%
   summarise(cases=sum(nb))
 europe1719 <- europe %>%
   filter_index("2017 W01"~.)
-
 ## fit best model
 model_europe <- filter_index(europe,.~"2016 W52") %>%
   model(ARIMA(log(cases+1)~fourier(K=3)+1+pdq(0,1,1)+PDQ(0,0,0)))
-
 ## create forecast for 2018
 forecast_europe <- forecast(model_europe,h=156) %>% 
   ## include 80% and 90% confidence intervals
@@ -536,18 +493,14 @@ forecast_europe <- forecast(model_europe,h=156) %>%
     upper_80 = '80%_upper',
     lower_95 = '95%_lower',
     lower_80 = '80%_lower')
-
 ## add observed cases for 2018 to forecast
 forecast_europe$observed <- europe1719$cases
-
 ## plot the foreacst
 p <- ECDC_plot(forecast_europe, europe) +
   ggtitle("Weekly LD cases by date of onset (2012-2019) with retrospective prediction of 2017-2019 
   based on a 2012-2016 model, age 80+, EU/EEA")
 ggplotly(p)
-
 excess_fun(forecast_europe)
-
 cat("#### Model & residuals \n")
 analysis_fun(model_europe)
 ```
@@ -563,11 +516,9 @@ europe <- legi_tsibble %>%
   summarise(cases=sum(nb))
 europe1719 <- europe %>%
   filter_index("2017 W01"~.)
-
 ## fit best model
 model_europe <- filter_index(europe,.~"2016 W52") %>%
   model(ARIMA(log(cases+1)~fourier(K=4)+1+pdq(0,1,3)+PDQ(0,0,0)))
-
 ## create forecast for 2018
 forecast_europe <- forecast(model_europe,h=156) %>% 
   ## include 80% and 90% confidence intervals
@@ -577,18 +528,14 @@ forecast_europe <- forecast(model_europe,h=156) %>%
     upper_80 = '80%_upper',
     lower_95 = '95%_lower',
     lower_80 = '80%_lower')
-
 ## add observed cases for 2018 to forecast
 forecast_europe$observed <- europe1719$cases
-
 ## plot the foreacst
 p <- ECDC_plot(forecast_europe, europe) +
   ggtitle("Weekly LD cases by date of onset (2012-2019) with retrospective prediction of 2017-2019 
   based on a 2012-2016 model, males, EU/EEA")
 ggplotly(p)
-
 excess_fun(forecast_europe)
-
 cat("#### Model & residuals \n")
 analysis_fun(model_europe)
 ```
@@ -604,11 +551,9 @@ europe <- legi_tsibble %>%
   summarise(cases=sum(nb))
 europe1719 <- europe %>%
   filter_index("2017 W01"~.)
-
 ## fit best model
 model_europe <- filter_index(europe,.~"2016 W52") %>%
   model(ARIMA(log(cases+1)~fourier(K=3)+1+pdq(0,1,2)+PDQ(0,0,0)))
-
 ## create forecast for 2018
 forecast_europe <- forecast(model_europe,h=156) %>% 
   ## include 80% and 90% confidence intervals
@@ -618,25 +563,21 @@ forecast_europe <- forecast(model_europe,h=156) %>%
     upper_80 = '80%_upper',
     lower_95 = '95%_lower',
     lower_80 = '80%_lower')
-
 ## add observed cases for 2018 to forecast
 forecast_europe$observed <- europe1719$cases
-
 ## plot the foreacst
 p <- ECDC_plot(forecast_europe, europe) +
   ggtitle("Weekly LD cases by date of onset (2012-2019) with retrospective prediction of 2017-2019 
   based on a 2012-2016 model, females, EU/EEA")
 ggplotly(p)
-
 excess_fun(forecast_europe)
-
 cat("#### Model & residuals \n")
 analysis_fun(model_europe)
 ```
 
-
-
-## 2017 interrupted time series {.tabset}
+2017 interrupted time series
+==================
+## Interrupted time series {.tabset}
 ### All cases {.tabset}
 #### Results
 ```{r its analysis,results="asis"}

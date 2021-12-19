@@ -316,6 +316,8 @@ excess_fun <- function(forecast_europe){
            year="Total") %>% 
     select(year,observed,pred,upper_95,diff_pred,change_pred,above_95,change_95)
   
+  over_predicted <<- total_table |> select(diff_pred,change_pred,above_95,change_95)
+  
   ## table of each week with observed and predicted cases
   t <- rbind(table_2017, table_2018, table_2019, total_table) %>% 
     kable(digits=c(0,0,0,0,0,1,0,1), "html", align="c",
