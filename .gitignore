@@ -4,3 +4,7 @@
 .Ruserdata
 Data
 Legi/legi_agg_onset_4.csv
+*.html
+*.rds
+*.csv
+*.dcf
