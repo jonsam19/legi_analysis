@@ -1,10 +1,31 @@
 ---
 title: "Legionnaires’ disease in Europe: increasing trend in 2017-2019"
-output: flexdashboard::flex_dashboard
+output: 
+  flexdashboard::flex_dashboard:
 runtime: shiny
 editor_options:
   chunk_output_type: console
 ---
+
+<style>                     
+.navbar {
+  background-color:#65B32E;
+  border-color:#207732;
+}
+.navbar-inverse .navbar-nav > li > a:hover,
+.navbar-inverse .navbar-nav > li > a:focus {
+  color:white;
+  background-color:#207732;
+}
+.navbar-inverse .navbar-nav > .active > a,
+.navbar-inverse .navbar-nav > .active > a:hover,
+.navbar-inverse .navbar-nav > .active > a:focus {
+  color: white;
+  background-color:#207732;
+}
+
+
+</style>  
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo=FALSE, warning=FALSE, message=FALSE)
@@ -139,20 +160,22 @@ Overview 2012-2019
 Sidebar {.sidebar}
 ---------------------
 
+#### Abstract
+
 **Background:**
-The annual LD notification rate in the EU/EEA increased from 1.0-1.4 per 100,000 during 2011-2016 to 1.8-2.2 in 2017-2019.
+Burden of Legionnaires’ disease (LD) in EU/EEA has increased under the last decade, with annual notification rates increasing from 1.2-1.4 per 100,000 under 2012-2016, to 1.8-2.2 within 2017-2019.
 
 **Aim:**
-The aim of this study was to analyse whether the increase observed was statistically and consistently higher than the one expected and whether there was a marked change in trend during this period. Moreover, we aimed to assess if there were differences according to age, gender, or importation of infection. 
+We aimed to measure the amount of weekly excess cases under the period 2017-2019 based on previous year trends and whether there was a significant change in trend during this period. Moreover, we aimed to assess if there were differences according to age, gender, or level of imported infections. 
 
 **Methods:**
-We used 2012-2019 data from the European Surveillance System (TESSy) reported by EU/EEA Member States. A retrospective prediction by dynamic regression model was created from 2012-2016 data to analyse the percentage increase in cases in 2017-2019. Interrupted time series analysis was also performed to determine if there had been a significant change in trend in 2017-2019 compared with the previous five years.
+We collated 2012-2019 annual surveillance data from the European Surveillance System (TESSy) reported by EU/EEA countries. A retrospective prediction by dynamic regression model was created from 2012-2016 data to analyse the percentage increase in cases in 2017-2019. Interrupted time series (ITS) analysis was also performed to determine if there had been a significant change in trend in 2017-2019 compared with the previous five years.
 
 **Results:** 
-Overall, we found a 33.4% increase in cases in 2017-2019 compared with what was predicted. The ITS also found a significant trend increase in 2017-2019 compared with 2012-2016. All stratifications had cases above the predicted at an increase of 20-47%, and a significant trend increase was observed mostly among older age groups, males, and domestic cases. 
+Overall, we found a 33.4% increase in cases in 2017-2019 compared with predicted. The ITS also found a significant trend increase in 2017-2019 compared with 2012-2016. A significant trend increase was observed mostly among older age groups, males, and domestic cases.
 
 **Conclusion:**
-Our study indicates an increasing trend in LD cases during 2017-2019 compared with the previous five years, and the distribution of cases per week suggests an overall amplification of the seasonal trends. These findings suggest that LD may be an infectious disease of significant risk for increase and importance in the European region in coming years.
+Our study showed a significant increasing trend in LD cases in the EU/EEA during 2017-2019 compared with the previous five years. The distribution of cases per week suggests an overall amplification of the seasonal trends. These findings support that LD continues to be an infectious disease of public health concern in the EU/EEA, warranting further research into determinants of the increase.
 
 
 Time series {.tabset}
@@ -296,7 +319,7 @@ renderUI({
                       "O-E", "Percent change (%)", "Number", "Percent change (%)")) |>
     kable_styling(bootstrap_options = c("striped", "hover")) |>
     add_header_above(c(" "=4, "Cases above prediction"=2, "Cases above 95% PI"=2)) |>
-    column_spec(2:8, width=2))
+    column_spec(2:8, width=2) |> column_spec(1,bold=TRUE))
     
   } else if(input$select_prediction=="Imported") {
     shiny_excess(readRDS("Models and plots/forecast_imported.rds"))
@@ -306,7 +329,7 @@ renderUI({
                       "O-E", "Percent change (%)", "Number", "Percent change (%)")) |>
     kable_styling(bootstrap_options = c("striped", "hover")) |>
     add_header_above(c(" "=4, "Cases above prediction"=2, "Cases above 95% PI"=2)) |>
-    column_spec(2:8, width=2))
+    column_spec(2:8, width=2) |> column_spec(1,bold=TRUE))
     
   } else if(input$select_prediction=="Not imported") {
     shiny_excess(readRDS("Models and plots/forecast_notimported.rds"))
@@ -316,7 +339,7 @@ renderUI({
                       "O-E", "Percent change (%)", "Number", "Percent change (%)")) |>
     kable_styling(bootstrap_options = c("striped", "hover")) |>
     add_header_above(c(" "=4, "Cases above prediction"=2, "Cases above 95% PI"=2)) |>
-    column_spec(2:8, width=2))
+    column_spec(2:8, width=2) |> column_spec(1,bold=TRUE))
     
   } else if(input$select_prediction=="<40") {
     shiny_excess(readRDS("Models and plots/forecast_40.rds"))
@@ -326,7 +349,7 @@ renderUI({
                       "O-E", "Percent change (%)", "Number", "Percent change (%)")) |>
     kable_styling(bootstrap_options = c("striped", "hover")) |>
     add_header_above(c(" "=4, "Cases above prediction"=2, "Cases above 95% PI"=2)) |>
-    column_spec(2:8, width=2))
+    column_spec(2:8, width=2) |> column_spec(1,bold=TRUE))
     
   } else if(input$select_prediction=="40-49") {
     shiny_excess(readRDS("Models and plots/forecast_40_49.rds"))
@@ -336,7 +359,7 @@ renderUI({
                       "O-E", "Percent change (%)", "Number", "Percent change (%)")) |>
     kable_styling(bootstrap_options = c("striped", "hover")) |>
     add_header_above(c(" "=4, "Cases above prediction"=2, "Cases above 95% PI"=2)) |>
-    column_spec(2:8, width=2))
+    column_spec(2:8, width=2) |> column_spec(1,bold=TRUE))
     
   } else if(input$select_prediction=="50-59") {
     shiny_excess(readRDS("Models and plots/forecast_50_59.rds"))
@@ -346,7 +369,7 @@ renderUI({
                       "O-E", "Percent change (%)", "Number", "Percent change (%)")) |>
     kable_styling(bootstrap_options = c("striped", "hover")) |>
     add_header_above(c(" "=4, "Cases above prediction"=2, "Cases above 95% PI"=2)) |>
-    column_spec(2:8, width=2))
+    column_spec(2:8, width=2) |> column_spec(1,bold=TRUE))
     
   } else if(input$select_prediction=="60-69") {
     shiny_excess(readRDS("Models and plots/forecast_60_69.rds"))
@@ -356,7 +379,7 @@ renderUI({
                       "O-E", "Percent change (%)", "Number", "Percent change (%)")) |>
     kable_styling(bootstrap_options = c("striped", "hover")) |>
     add_header_above(c(" "=4, "Cases above prediction"=2, "Cases above 95% PI"=2)) |>
-    column_spec(2:8, width=2))
+    column_spec(2:8, width=2) |> column_spec(1,bold=TRUE))
     
   } else if(input$select_prediction=="70-79") {
     shiny_excess(readRDS("Models and plots/forecast_70_79.rds"))
@@ -366,7 +389,7 @@ renderUI({
                       "O-E", "Percent change (%)", "Number", "Percent change (%)")) |>
     kable_styling(bootstrap_options = c("striped", "hover")) |>
     add_header_above(c(" "=4, "Cases above prediction"=2, "Cases above 95% PI"=2)) |>
-    column_spec(2:8, width=2))
+    column_spec(2:8, width=2) |> column_spec(1,bold=TRUE))
     
   } else if(input$select_prediction=="80>=") {
     shiny_excess(readRDS("Models and plots/forecast_80.rds"))
@@ -376,7 +399,7 @@ renderUI({
                       "O-E", "Percent change (%)", "Number", "Percent change (%)")) |>
     kable_styling(bootstrap_options = c("striped", "hover")) |>
     add_header_above(c(" "=4, "Cases above prediction"=2, "Cases above 95% PI"=2)) |>
-    column_spec(2:8, width=2))
+    column_spec(2:8, width=2) |> column_spec(1,bold=TRUE))
     
   } else if(input$select_prediction=="F") {
     shiny_excess(readRDS("Models and plots/forecast_female.rds"))
@@ -386,7 +409,7 @@ renderUI({
                       "O-E", "Percent change (%)", "Number", "Percent change (%)")) |>
     kable_styling(bootstrap_options = c("striped", "hover")) |>
     add_header_above(c(" "=4, "Cases above prediction"=2, "Cases above 95% PI"=2)) |>
-    column_spec(2:8, width=2))
+    column_spec(2:8, width=2) |> column_spec(1,bold=TRUE))
     
   } else if(input$select_prediction=="M") {
     shiny_excess(readRDS("Models and plots/forecast_male.rds"))
@@ -396,7 +419,7 @@ renderUI({
                       "O-E", "Percent change (%)", "Number", "Percent change (%)")) |>
     kable_styling(bootstrap_options = c("striped", "hover")) |>
     add_header_above(c(" "=4, "Cases above prediction"=2, "Cases above 95% PI"=2)) |>
-    column_spec(2:8, width=2))
+    column_spec(2:8, width=2) |> column_spec(1,bold=TRUE))
     
   }
 })
