@@ -781,5 +781,18 @@ analysis_shiny <- function(model_europe){
 }
 
 
-############################### ITS Shiny #############################
-
+################################## save tsibble ###################################
+ts2csv <- function(x) {
+  fname <- paste0(deparse(substitute(x)), ".csv")
+  if (NCOL(x) == 1L) {
+    # Univariate time series
+    readr::write_csv(
+      as.data.frame(tsibble::as_tsibble(x)),
+      fname)
+  } else {
+    # Multivariate time series
+    readr::write_csv(
+      as.data.frame(spread(tsibble::as_tsibble(x), key, value)),
+      fname)
+  }
+}
