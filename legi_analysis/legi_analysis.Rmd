@@ -145,9 +145,10 @@ ggplotly(p)
 Sidebar {.sidebar}
 ---------------------
 ```{r sidebar_prediction}
-selectInput("select_prediction",label="Select group",
-            choices=c("All","Imported","Not imported","<40","40-49","50-59","60-69",
-                      "70-79","80>=","F","M"))
+radioButtons("select_prediction",label="Select group",
+            choices=c("All cases","Imported cases","Domestic cases","<40 age group","40-49 age group",
+                      "50-59 age group","60-69 age group",
+                      "70-79 age group","80>= age group","Females","Males"))
 ```
 
 Retrospective prediction {.tabset}
@@ -156,58 +157,58 @@ Retrospective prediction {.tabset}
 ```{r europe tsibble, results="asis"}
 renderPlotly({
   
-  if(input$select_prediction=="All"){
+  if(input$select_prediction=="All cases"){
     ggplotly(shiny_plot(readRDS("Models and plots/forecast_all.rds"),
                legi_tsibble |> summarise(cases=sum(nb)))) |> 
       layout(legend=list(title=list(text=" ")))
     
-  } else if(input$select_prediction=="Imported") {
+  } else if(input$select_prediction=="Imported cases") {
     ggplotly(shiny_plot(readRDS("Models and plots/forecast_imported.rds"),
                legi_tsibble |> filter(Imported3=="Imported") |> summarise(cases=sum(nb)))) |> 
       layout(legend=list(title=list(text=" ")))
     
-  } else if(input$select_prediction=="Not imported") {
+  } else if(input$select_prediction=="Domestic cases") {
     ggplotly(shiny_plot(readRDS("Models and plots/forecast_notimported.rds"),
                legi_tsibble |> filter(Imported3=="Not imported") |> summarise(cases=sum(nb)))) |> 
       layout(legend=list(title=list(text=" ")))
     
-  } else if(input$select_prediction=="<40") {
+  } else if(input$select_prediction=="<40 age group") {
     ggplotly(shiny_plot(readRDS("Models and plots/forecast_40.rds"),
                legi_tsibble |> filter(AgeGroup2=="<40") |> summarise(cases=sum(nb)))) |> 
       layout(legend=list(title=list(text=" ")))
     
-  } else if(input$select_prediction=="40-49") {
+  } else if(input$select_prediction=="40-49 age group") {
     ggplotly(shiny_plot(readRDS("Models and plots/forecast_40_49.rds"),
                legi_tsibble |> filter(AgeGroup2=="40-49") |> summarise(cases=sum(nb)))) |> 
       layout(legend=list(title=list(text=" ")))
     
-  } else if(input$select_prediction=="50-59") {
+  } else if(input$select_prediction=="50-59 age group") {
     ggplotly(shiny_plot(readRDS("Models and plots/forecast_50_59.rds"),
                legi_tsibble |> filter(AgeGroup2=="50-59") |> summarise(cases=sum(nb)))) |> 
       layout(legend=list(title=list(text=" ")))
     
-  } else if(input$select_prediction=="60-69") {
+  } else if(input$select_prediction=="60-69 age group") {
     ggplotly(shiny_plot(readRDS("Models and plots/forecast_60_69.rds"),
                legi_tsibble |> filter(AgeGroup2=="60-69") |> summarise(cases=sum(nb)))) |> 
       layout(legend=list(title=list(text=" ")))
     
-  } else if(input$select_prediction=="70-79") {
+  } else if(input$select_prediction=="70-79 age group") {
     ggplotly(shiny_plot(readRDS("Models and plots/forecast_70_79.rds"),
                legi_tsibble |> filter(AgeGroup2=="70-79") |> summarise(cases=sum(nb)))) |> 
       layout(legend=list(title=list(text=" ")))
     
-  } else if(input$select_prediction=="80>=") {
+  } else if(input$select_prediction=="80>= age group") {
     ggplotly(shiny_plot(readRDS("Models and plots/forecast_80.rds"),
                legi_tsibble |> filter(AgeGroup2=="80>=") |> summarise(cases=sum(nb)))) |> 
       layout(legend=list(title=list(text=" ")))
     
-  } else if(input$select_prediction=="F") {
+  } else if(input$select_prediction=="Females") {
     ggplotly(shiny_plot(readRDS("Models and plots/forecast_female.rds"),
                legi_tsibble |> filter(Gender=="F") |> summarise(cases=sum(nb)))) |> 
       layout(legend=list(title=list(text=" ")))
     
   }
-   else if(input$select_prediction=="M") {
+   else if(input$select_prediction=="Males") {
     ggplotly(shiny_plot(readRDS("Models and plots/forecast_male.rds"),
                legi_tsibble |> filter(Gender=="M") |> summarise(cases=sum(nb)))) |> 
       layout(legend=list(title=list(text=" ")))
@@ -219,7 +220,7 @@ renderPlotly({
 ```{r retrospective table,results='asis'}
 renderUI({
   
-  if(input$select_prediction=="All"){
+  if(input$select_prediction=="All cases"){
     shiny_excess(readRDS("Models and plots/forecast_all.rds"))
     HTML(rbind(table_2017, table_2018, table_2019, total_table) |> 
     knitr::kable(digits=c(0,0,0,0,0,1,0,1), "html", align="c",
@@ -229,7 +230,7 @@ renderUI({
     add_header_above(c(" "=4, "Cases above prediction"=2, "Cases above 95% PI"=2)) |>
     column_spec(2:8, width=2) |> column_spec(1,bold=TRUE))
     
-  } else if(input$select_prediction=="Imported") {
+  } else if(input$select_prediction=="Imported cases") {
     shiny_excess(readRDS("Models and plots/forecast_imported.rds"))
     HTML(rbind(table_2017, table_2018, table_2019, total_table) |> 
     knitr::kable(digits=c(0,0,0,0,0,1,0,1), "html", align="c",
@@ -239,7 +240,7 @@ renderUI({
     add_header_above(c(" "=4, "Cases above prediction"=2, "Cases above 95% PI"=2)) |>
     column_spec(2:8, width=2) |> column_spec(1,bold=TRUE))
     
-  } else if(input$select_prediction=="Not imported") {
+  } else if(input$select_prediction=="Domestic cases") {
     shiny_excess(readRDS("Models and plots/forecast_notimported.rds"))
     HTML(rbind(table_2017, table_2018, table_2019, total_table) |> 
     knitr::kable(digits=c(0,0,0,0,0,1,0,1), "html", align="c",
@@ -249,7 +250,7 @@ renderUI({
     add_header_above(c(" "=4, "Cases above prediction"=2, "Cases above 95% PI"=2)) |>
     column_spec(2:8, width=2) |> column_spec(1,bold=TRUE))
     
-  } else if(input$select_prediction=="<40") {
+  } else if(input$select_prediction=="<40 age group") {
     shiny_excess(readRDS("Models and plots/forecast_40.rds"))
     HTML(rbind(table_2017, table_2018, table_2019, total_table) |> 
     knitr::kable(digits=c(0,0,0,0,0,1,0,1), "html", align="c",
@@ -259,7 +260,7 @@ renderUI({
     add_header_above(c(" "=4, "Cases above prediction"=2, "Cases above 95% PI"=2)) |>
     column_spec(2:8, width=2) |> column_spec(1,bold=TRUE))
     
-  } else if(input$select_prediction=="40-49") {
+  } else if(input$select_prediction=="40-49 age group") {
     shiny_excess(readRDS("Models and plots/forecast_40_49.rds"))
     HTML(rbind(table_2017, table_2018, table_2019, total_table) |> 
     knitr::kable(digits=c(0,0,0,0,0,1,0,1), "html", align="c",
@@ -269,7 +270,7 @@ renderUI({
     add_header_above(c(" "=4, "Cases above prediction"=2, "Cases above 95% PI"=2)) |>
     column_spec(2:8, width=2) |> column_spec(1,bold=TRUE))
     
-  } else if(input$select_prediction=="50-59") {
+  } else if(input$select_prediction=="50-59 age group") {
     shiny_excess(readRDS("Models and plots/forecast_50_59.rds"))
     HTML(rbind(table_2017, table_2018, table_2019, total_table) |> 
     knitr::kable(digits=c(0,0,0,0,0,1,0,1), "html", align="c",
@@ -279,7 +280,7 @@ renderUI({
     add_header_above(c(" "=4, "Cases above prediction"=2, "Cases above 95% PI"=2)) |>
     column_spec(2:8, width=2) |> column_spec(1,bold=TRUE))
     
-  } else if(input$select_prediction=="60-69") {
+  } else if(input$select_prediction=="60-69 age group") {
     shiny_excess(readRDS("Models and plots/forecast_60_69.rds"))
     HTML(rbind(table_2017, table_2018, table_2019, total_table) |> 
     knitr::kable(digits=c(0,0,0,0,0,1,0,1), "html", align="c",
@@ -289,7 +290,7 @@ renderUI({
     add_header_above(c(" "=4, "Cases above prediction"=2, "Cases above 95% PI"=2)) |>
     column_spec(2:8, width=2) |> column_spec(1,bold=TRUE))
     
-  } else if(input$select_prediction=="70-79") {
+  } else if(input$select_prediction=="70-79 age group") {
     shiny_excess(readRDS("Models and plots/forecast_70_79.rds"))
     HTML(rbind(table_2017, table_2018, table_2019, total_table) |> 
     knitr::kable(digits=c(0,0,0,0,0,1,0,1), "html", align="c",
@@ -299,7 +300,7 @@ renderUI({
     add_header_above(c(" "=4, "Cases above prediction"=2, "Cases above 95% PI"=2)) |>
     column_spec(2:8, width=2) |> column_spec(1,bold=TRUE))
     
-  } else if(input$select_prediction=="80>=") {
+  } else if(input$select_prediction=="80>= age group") {
     shiny_excess(readRDS("Models and plots/forecast_80.rds"))
     HTML(rbind(table_2017, table_2018, table_2019, total_table) |> 
     knitr::kable(digits=c(0,0,0,0,0,1,0,1), "html", align="c",
@@ -309,7 +310,7 @@ renderUI({
     add_header_above(c(" "=4, "Cases above prediction"=2, "Cases above 95% PI"=2)) |>
     column_spec(2:8, width=2) |> column_spec(1,bold=TRUE))
     
-  } else if(input$select_prediction=="F") {
+  } else if(input$select_prediction=="Females") {
     shiny_excess(readRDS("Models and plots/forecast_female.rds"))
     HTML(rbind(table_2017, table_2018, table_2019, total_table) |> 
     knitr::kable(digits=c(0,0,0,0,0,1,0,1), "html", align="c",
@@ -319,7 +320,7 @@ renderUI({
     add_header_above(c(" "=4, "Cases above prediction"=2, "Cases above 95% PI"=2)) |>
     column_spec(2:8, width=2) |> column_spec(1,bold=TRUE))
     
-  } else if(input$select_prediction=="M") {
+  } else if(input$select_prediction=="Males") {
     shiny_excess(readRDS("Models and plots/forecast_male.rds"))
     HTML(rbind(table_2017, table_2018, table_2019, total_table) |> 
     knitr::kable(digits=c(0,0,0,0,0,1,0,1), "html", align="c",
@@ -337,77 +338,77 @@ renderUI({
 ### Model
 ```{r prediction model,results='asis'}
 renderUI({
-  if(input$select_prediction=="All"){
+  if(input$select_prediction=="All cases"){
     HTML(readRDS("Models and plots/model_all.rds") |>
       coef() |> select(-.model) |>
     kable(col.names=c("Term", "Estimate", "Standard error", "Test statistic", "P-value"),
           digits=3,caption=print(augment(readRDS("Models and plots/model_all.rds"))[1,1])) |>
     kable_styling(bootstrap_options = c("striped", "condensed","hover")))
 
-  } else if(input$select_prediction=="Imported"){
+  } else if(input$select_prediction=="Imported cases"){
     HTML(readRDS("Models and plots/model_imported.rds") |>
       coef() |> select(-.model) |>
     kable(col.names=c("Term", "Estimate", "Standard error", "Test statistic", "P-value"),
           digits=3,caption=print(augment(readRDS("Models and plots/model_imported.rds"))[1,1])) |>
     kable_styling(bootstrap_options = c("striped", "condensed","hover")))
     
-  } else if(input$select_prediction=="Not imported"){
+  } else if(input$select_prediction=="Domestic cases"){
     HTML(readRDS("Models and plots/model_notimported.rds") |>
       coef() |> select(-.model) |>
     kable(col.names=c("Term", "Estimate", "Standard error", "Test statistic", "P-value"),
           digits=3,caption=print(augment(readRDS("Models and plots/model_notimported.rds"))[1,1])) |>
     kable_styling(bootstrap_options = c("striped", "condensed","hover")))
     
-  } else if(input$select_prediction=="<40"){
+  } else if(input$select_prediction=="<40 age group"){
     HTML(readRDS("Models and plots/model_40.rds") |>
       coef() |> select(-.model) |>
     kable(col.names=c("Term", "Estimate", "Standard error", "Test statistic", "P-value"),
           digits=3,caption=print(augment(readRDS("Models and plots/model_40.rds"))[1,1])) |>
     kable_styling(bootstrap_options = c("striped", "condensed","hover")))
     
-  } else if(input$select_prediction=="40-49"){
+  } else if(input$select_prediction=="40-49 age group"){
     HTML(readRDS("Models and plots/model_40_49.rds") |>
       coef() |> select(-.model) |>
     kable(col.names=c("Term", "Estimate", "Standard error", "Test statistic", "P-value"),
           digits=3,caption=print(augment(readRDS("Models and plots/model_40_49.rds"))[1,1])) |>
     kable_styling(bootstrap_options = c("striped", "condensed","hover")))
     
-  } else if(input$select_prediction=="50-59"){
+  } else if(input$select_prediction=="50-59 age group"){
     HTML(readRDS("Models and plots/model_50_59.rds") |>
       coef() |> select(-.model) |>
     kable(col.names=c("Term", "Estimate", "Standard error", "Test statistic", "P-value"),
           digits=3,caption=print(augment(readRDS("Models and plots/model_50_59.rds"))[1,1])) |>
     kable_styling(bootstrap_options = c("striped", "condensed","hover")))
     
-  } else if(input$select_prediction=="60-69"){
+  } else if(input$select_prediction=="60-69 age group"){
     HTML(readRDS("Models and plots/model_60_69.rds") |>
       coef() |> select(-.model) |>
     kable(col.names=c("Term", "Estimate", "Standard error", "Test statistic", "P-value"),
           digits=3,caption=print(augment(readRDS("Models and plots/model_60_69.rds"))[1,1])) |>
     kable_styling(bootstrap_options = c("striped", "condensed","hover")))
     
-  } else if(input$select_prediction=="70-79"){
+  } else if(input$select_prediction=="70-79 age group"){
     HTML(readRDS("Models and plots/model_70_79.rds") |>
       coef() |> select(-.model) |>
     kable(col.names=c("Term", "Estimate", "Standard error", "Test statistic", "P-value"),
           digits=3,caption=print(augment(readRDS("Models and plots/model_70_79.rds"))[1,1])) |>
     kable_styling(bootstrap_options = c("striped", "condensed","hover")))
     
-  } else if(input$select_prediction=="80>="){
+  } else if(input$select_prediction=="80>= age group"){
     HTML(readRDS("Models and plots/model_80.rds") |>
       coef() |> select(-.model) |>
     kable(col.names=c("Term", "Estimate", "Standard error", "Test statistic", "P-value"),
           digits=3,caption=print(augment(readRDS("Models and plots/model_80.rds"))[1,1])) |>
     kable_styling(bootstrap_options = c("striped", "condensed","hover")))
     
-  } else if(input$select_prediction=="F"){
+  } else if(input$select_prediction=="Females"){
     HTML(readRDS("Models and plots/model_female.rds") |>
       coef() |> select(-.model) |>
     kable(col.names=c("Term", "Estimate", "Standard error", "Test statistic", "P-value"),
           digits=3,caption=print(augment(readRDS("Models and plots/model_female.rds"))[1,1])) |>
     kable_styling(bootstrap_options = c("striped", "condensed","hover")))
     
-  } else if(input$select_prediction=="M"){
+  } else if(input$select_prediction=="Males"){
     HTML(readRDS("Models and plots/model_male.rds") |>
       coef() |> select(-.model) |>
     kable(col.names=c("Term", "Estimate", "Standard error", "Test statistic", "P-value"),
@@ -420,47 +421,47 @@ renderUI({
 ### Residuals
 ```{r rprediction residuals,results='asis'}
 renderPlot({
-  if(input$select_prediction=="All"){
+  if(input$select_prediction=="All cases"){
     readRDS("Models and plots/model_all.rds") |>  
       gg_tsresiduals(lag_max=52)
 
-  } else if(input$select_prediction=="Imported"){
+  } else if(input$select_prediction=="Imported cases"){
     readRDS("Models and plots/model_imported.rds") |>  
       gg_tsresiduals(lag_max=52)
     
-  } else if(input$select_prediction=="Not imported"){
+  } else if(input$select_prediction=="Domestic cases"){
     readRDS("Models and plots/model_notimported.rds") |>  
       gg_tsresiduals(lag_max=52)
     
-  } else if(input$select_prediction=="<40"){
+  } else if(input$select_prediction=="<40 age group"){
     readRDS("Models and plots/model_40.rds") |>  
       gg_tsresiduals(lag_max=52)
     
-  } else if(input$select_prediction=="40-49"){
+  } else if(input$select_prediction=="40-49 age group"){
     readRDS("Models and plots/model_40_49.rds") |>  
       gg_tsresiduals(lag_max=52)
     
-  } else if(input$select_prediction=="50-59"){
+  } else if(input$select_prediction=="50-59 age group"){
     readRDS("Models and plots/model_50_59.rds") |>  
       gg_tsresiduals(lag_max=52)
     
-  } else if(input$select_prediction=="60-69"){
+  } else if(input$select_prediction=="60-69 age group"){
     readRDS("Models and plots/model_60_69.rds") |>  
       gg_tsresiduals(lag_max=52)
     
-  } else if(input$select_prediction=="70-79"){
+  } else if(input$select_prediction=="70-79 age group"){
     readRDS("Models and plots/model_70_79.rds") |>  
       gg_tsresiduals(lag_max=52)
     
-  } else if(input$select_prediction=="80>="){
+  } else if(input$select_prediction=="80>= age group"){
     readRDS("Models and plots/model_80.rds") |>  
       gg_tsresiduals(lag_max=52)
     
-  } else if(input$select_prediction=="F"){
+  } else if(input$select_prediction=="Females"){
     readRDS("Models and plots/model_female.rds") |>  
       gg_tsresiduals(lag_max=52)
     
-  } else if(input$select_prediction=="M"){
+  } else if(input$select_prediction=="Males"){
     readRDS("Models and plots/model_male.rds") |>  
       gg_tsresiduals(lag_max=52)
   }
@@ -474,9 +475,10 @@ renderPlot({
 Sidebar {.sidebar}
 ---------------------
 ```{r sidebar_its}
-selectInput("select_its",label="Select group",
-            choices=c("All","Imported","Not imported","<40","40-49","50-59","60-69",
-                      "70-79","80>=","F","M"))
+radioButtons("select_its",label="Select group",
+            choices=c("All cases","Imported cases","Domestic cases","<40 age group","40-49 age group",
+                      "50-59 age group","60-69 age group","70-79 age group",
+                      "80>= age group","Females","Males"))
 ```
 
 Interrupted time series {.tabset}
@@ -485,39 +487,39 @@ Interrupted time series {.tabset}
 ```{r its analysis,results="asis"}
 renderPlotly({
   
-  if(input$select_its=="All"){
+  if(input$select_its=="All cases"){
     ggplotly(readRDS("Models and plots/itsplot_all.rds")) |> 
       layout(legend=list(title=list(text=" ")))
     
-  } else if(input$select_its=="Imported") {
+  } else if(input$select_its=="Imported cases") {
     ggplotly(readRDS("Models and plots/itsplot_imported.rds")) |> 
       layout(legend=list(title=list(text=" ")))
     
-  } else if(input$select_its=="Not imported") {
+  } else if(input$select_its=="Domestic cases") {
     ggplotly(readRDS("Models and plots/itsplot_notimported.rds")) |> 
       layout(legend=list(title=list(text=" ")))
     
-  } else if(input$select_its=="<40") {
+  } else if(input$select_its=="<40 age group") {
     ggplotly(readRDS("Models and plots/itsplot_40.rds")) |> 
       layout(legend=list(title=list(text=" ")))
     
-  } else if(input$select_its=="40-49") {
+  } else if(input$select_its=="40-49 age group") {
     ggplotly(readRDS("Models and plots/itsplot_40.rds")) |> 
       layout(legend=list(title=list(text=" ")))
     
-  } else if(input$select_its=="50-59") {
+  } else if(input$select_its=="50-59 age group") {
     ggplotly(readRDS("Models and plots/itsplot_50_59.rds")) |> 
       layout(legend=list(title=list(text=" ")))
     
-  } else if(input$select_its=="60-69") {
+  } else if(input$select_its=="60-69 age group") {
     ggplotly(readRDS("Models and plots/itsplot_60_69.rds")) |> 
       layout(legend=list(title=list(text=" ")))
     
-  } else if(input$select_its=="70-79") {
+  } else if(input$select_its=="70-79 age group") {
     ggplotly(readRDS("Models and plots/itsplot_70_79.rds")) |> 
       layout(legend=list(title=list(text=" ")))
     
-  } else if(input$select_its=="80>=") {
+  } else if(input$select_its=="80>= age group") {
     ggplotly(readRDS("Models and plots/itsplot_80.rds")) |> 
       layout(legend=list(title=list(text=" ")))
     
@@ -535,31 +537,31 @@ renderPlotly({
 ### Model
 ```{r its model,results='asis'}
 renderUI({
-  if(input$select_its=="All"){
+  if(input$select_its=="All cases"){
     HTML(readRDS("Models and plots/itsmodel_all.rds"))
 
-  } else if(input$select_its=="Imported"){
+  } else if(input$select_its=="Imported cases"){
     HTML(readRDS("Models and plots/itsmodel_imported.rds"))
     
-  } else if(input$select_its=="Not imported"){
+  } else if(input$select_its=="Domestic cases"){
     HTML(readRDS("Models and plots/itsmodel_notimported.rds"))
     
-  } else if(input$select_its=="<40"){
+  } else if(input$select_its=="<40 age group"){
     HTML(readRDS("Models and plots/itsmodel_40.rds"))
     
-  } else if(input$select_its=="40-49"){
+  } else if(input$select_its=="40-49 age group"){
     HTML(readRDS("Models and plots/itsmodel_40_49.rds"))
     
-  } else if(input$select_its=="50-59"){
+  } else if(input$select_its=="50-59 age group"){
     HTML(readRDS("Models and plots/itsmodel_50_59.rds"))
     
-  } else if(input$select_its=="60-69"){
+  } else if(input$select_its=="60-69 age group"){
     HTML(readRDS("Models and plots/itsmodel_60_69.rds"))
     
-  } else if(input$select_its=="70-79"){
+  } else if(input$select_its=="70-79 age group"){
     HTML(readRDS("Models and plots/itsmodel_70_79.rds"))
     
-  } else if(input$select_its=="80>="){
+  } else if(input$select_its=="80>= age group"){
     HTML(readRDS("Models and plots/itsmodel_80.rds"))
     
   } else if(input$select_its=="F"){
@@ -575,39 +577,39 @@ renderUI({
 ### Residuals
 ```{r its residuals,results="asis"}
 renderPlot({
-  if(input$select_its=="All"){
+  if(input$select_its=="All cases"){
     readRDS("Models and plots/its_model_all.rds") |>  
       gg_tsresiduals(lag_max=52)
 
-  } else if(input$select_its=="Imported"){
+  } else if(input$select_its=="Imported cases"){
     readRDS("Models and plots/its_model_imported.rds") |>  
       gg_tsresiduals(lag_max=52)
     
-  } else if(input$select_its=="Not imported"){
+  } else if(input$select_its=="Domestic cases"){
     readRDS("Models and plots/its_model_notimported.rds") |>  
       gg_tsresiduals(lag_max=52)
     
-  } else if(input$select_its=="<40"){
+  } else if(input$select_its=="<40 age group"){
     readRDS("Models and plots/its_model_40.rds") |>  
       gg_tsresiduals(lag_max=52)
     
-  } else if(input$select_its=="40-49"){
+  } else if(input$select_its=="40-49 age group"){
     readRDS("Models and plots/its_model_40_49.rds") |>  
       gg_tsresiduals(lag_max=52)
     
-  } else if(input$select_its=="50-59"){
+  } else if(input$select_its=="50-59 age group"){
     readRDS("Models and plots/its_model_50_59.rds") |>  
       gg_tsresiduals(lag_max=52)
     
-  } else if(input$select_its=="60-69"){
+  } else if(input$select_its=="60-69 age group"){
     readRDS("Models and plots/its_model_60_69.rds") |>  
       gg_tsresiduals(lag_max=52)
     
-  } else if(input$select_its=="70-79"){
+  } else if(input$select_its=="70-79 age group"){
     readRDS("Models and plots/its_model_70_79.rds") |>  
       gg_tsresiduals(lag_max=52)
     
-  } else if(input$select_its=="80>="){
+  } else if(input$select_its=="80>= age group"){
     readRDS("Models and plots/its_model_80.rds") |>  
       gg_tsresiduals(lag_max=52)
     
